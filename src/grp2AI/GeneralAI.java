@@ -19,6 +19,9 @@ import java.util.Stack;
  */
 public class GeneralAI {
 
+    int worldSizeX = 0;
+    int worldSizeY = 0;
+
     EAction turn = null;
     int cameFrom = -1;
     ArrayList turnList = null;
@@ -42,7 +45,20 @@ public class GeneralAI {
     private TheHive hive = null;
 
     public GeneralAI() {
+  
         this.dirList = null;
+    }
+
+     public TheHive getHiveInstance() {
+
+        if (hive == null) {
+            hive = new TheHive(worldSizeX, worldSizeY);
+        }
+        return hive;
+    }
+
+    public AStar_Martin getAStarInstance() {
+        return hive.getAStarInstance();
     }
 
     //--------------------------------------------------------------------------
@@ -61,7 +77,7 @@ public class GeneralAI {
     }
 
     //2. Lays eggs, whenever this is possible. 
-    public EAction layEgg(IAntInfo thisAnt, List<EAction> pA) {
+    public EAction layEgg(IAntInfo thisAnt, List<EAction> pA, List<ILocationInfo> visLocations) {
         EAction eggAction = null;
 
         if (!visLocations.isEmpty() && pA.contains(EAction.LayEgg)) {
@@ -97,11 +113,11 @@ public class GeneralAI {
         return ant;
     }
 
-    public EAction returnHome(IAntInfo thisAnt, ILocationInfo goal) {
+    public EAction returnHome(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
 
         EAction action = null;
         ArrayList<ILocationInfo> locList;
-        locList = AStarPathFinder.findShortestPath(thisAnt.getLocation(), goal, worldMap);
+        locList = hive.getAStarInstance().findShortestPath(thisAnt.getLocation(), goal, worldMap);
 
         if (locList != null) {
 
@@ -195,7 +211,6 @@ public class GeneralAI {
     //---------------------------------------------SILAS---------------------------------------------------------------------
     public EAction explore(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
         EAction action = null;
-        
 
         if (isBlind(visibleLocations) && pA.contains(EAction.TurnLeft) || getAnt(visibleLocations) != null && pA.contains(EAction.TurnLeft)) {
             action = turnRnd(pA, thisAnt, hive);
@@ -263,47 +278,45 @@ public class GeneralAI {
         }
         return action;
     }
-    
-    public boolean isEnemy(List<ILocationInfo> visibleLocations, IAntInfo thisAnt){
+
+    public boolean isEnemy(List<ILocationInfo> visibleLocations, IAntInfo thisAnt) {
         boolean enemy = false;
         int self = thisAnt.getTeamInfo().getTeamID();
         int target = 0;
-       
+
         IAntInfo enemyAnt = getAnt(visibleLocations);
-        
-        if(enemyAnt != null){
+
+        if (enemyAnt != null) {
             target = enemyAnt.getTeamInfo().getTeamID();
-            if(target != self){
+            if (target != self) {
                 enemy = true;
             }
         }
         return enemy;
     }
 
-    
-    public boolean isBlind(List<ILocationInfo> visibleLocations){
+    public boolean isBlind(List<ILocationInfo> visibleLocations) {
         return visibleLocations.isEmpty() || visibleLocations.get(0).isFilled() || visibleLocations.get(0).isRock();
     }
-    
-    public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations){
+
+    public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
         EAction action = null;
-        
-        if(isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)){
+
+        if (isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)) {
             action = EAction.Attack;
         }
-               
+
         return action;
     }
-    
-    
+
     public EAction attackSelf(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
-        
+
         EAction action = null;
-        
-        if(!isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)){
+
+        if (!isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)) {
             action = EAction.Attack;
-        }        
-        
+        }
+
         return action;
     }
 

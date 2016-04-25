@@ -30,8 +30,6 @@ public class State {
     State seachAndDestoryState;
     State saveFoodState;
 
-    Boolean n = null;
-
     //scouts, warriors, carrier, queenGoHome, defendQueen, SearchForEnemy, reducePopulation.
     //-1 means not to take into account.
     public State() {
@@ -90,4 +88,56 @@ public class State {
         this.queenGoHome = queenGoHome;
         this.defendQueen = defendQueen;
     }  
+
+    public int getScoutAmount() {
+        return scoutAmount;
+    }
+
+    public int getWarriorAmount() {
+        return warriorAmount;
+    }
+
+    public int getCarrierAmount() {
+        return carrierAmount;
+    }
+
+    public boolean isQueenGoHome() {
+        return queenGoHome;
+    }
+
+    public boolean isDefendQueen() {
+        return defendQueen;
+    }
+
+    public boolean isReducePopulation() {
+        return reducePopulation;
+    }
+
+    public boolean isSearchForEnemy() {
+        return searchForEnemy;
+    }
+
+    public State getStartState() {
+        return startState;
+    }
+
+    public State getExploreState() {
+        return exploreState;
+    }
+
+    public State getDefendState() {
+        return defendState;
+    }
+
+    public State getSeachAndDestoryState() {
+        return seachAndDestoryState;
+    }
+
+    public State getSaveFoodState() {
+        return saveFoodState;
+    }
+    
+    
+    
+    
 }

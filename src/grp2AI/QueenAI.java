@@ -19,6 +19,8 @@ import java.util.List;
  * @author Silas
  */
 public class QueenAI extends GeneralAI implements IAntAI {
+    
+    
 
     //Pathfinding
     private AStar_Martin AStarPathFinder = null;
@@ -27,14 +29,22 @@ public class QueenAI extends GeneralAI implements IAntAI {
     
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive = TheHive.getHiveInstance();
+        this.worldSizeX = worldSizeX;
+        this.worldSizeY = worldSizeY;
+        hive = getHiveInstance();
         hive.makeMap(worldSizeX, worldSizeY);
-        AStarPathFinder = TheHive.getAStarInstance();
-//        hive.updateAnts();
+        hive.setStartPos(thisAnt.getLocation());
+        AStarPathFinder = getAStarInstance();
+        
+        //hive.updateAnts(true);
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
+        if(turn == 15) {
+        goingHome = true;
+        }
+        
         //Where am I on the map?
         //Should I go home?
     }
@@ -42,19 +52,30 @@ public class QueenAI extends GeneralAI implements IAntAI {
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         EAction action = null;
-        
+        hive.updateMap(visibleLocations);
+        worldMap = hive.getMap();        
         
         //#1 Survival
         action = survival(thisAnt, possibleActions);
         
         //#2 Expand
-        action = layEgg(thisAnt, possibleActions);
+        if(action == null && !goingHome){
+        action = layEgg(thisAnt, possibleActions, visibleLocations);
+        }
         
         //#3 Gather
+        if(action == null && !goingHome){
         action = pickUpFood(thisAnt, possibleActions);
+        }
         
         //#4 Scout
+        if(action == null && !goingHome){
         action = explore(possibleActions, thisAnt, visibleLocations);
+        }
+        
+        if(goingHome){
+        action = returnHome(thisAnt, hive.getStartPos(), worldMap);
+        }
         
         
         if(action == null){

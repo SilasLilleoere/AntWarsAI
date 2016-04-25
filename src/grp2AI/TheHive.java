@@ -10,35 +10,27 @@ import java.util.List;
  * @author martins
  */
 public class TheHive {
-    
 
-    public static int getBoardSizeY() {
-        return boardSizeY;
-    }
+    private ILocationInfo startPos = null;
+    private int boardSizeX = 0;
+    private int boardSizeY = 0;
+    private ILocationInfo[][] hiveMap = null;
+    private AStar_Martin AStarInstance = null;
+    private TheHive hiveInstance;
 
-    private static int boardSizeX = 0;
-    private static int boardSizeY = 0;
-    private static ILocationInfo[][] hiveMap = null;
-    private static AStar_Martin AStarInstance = null;
-    private static TheHive hiveInstance;
-
-    public static AStar_Martin getAStarInstance() {
+    public AStar_Martin getAStarInstance() {
 
         if (AStarInstance == null) {
+            System.out.println("Laver en instance af ASTAR :" + boardSizeX);
             AStarInstance = new AStar_Martin(boardSizeX, boardSizeY);
         }
         return AStarInstance;
     }
 
-    public static TheHive getHiveInstance() {
-
-        if (hiveInstance == null) {
-            hiveInstance = new TheHive();
-        }
-        return hiveInstance;
-    }
-
-    private TheHive() {
+    
+    public TheHive(int boardSizeX, int boardSizeY){
+        this.boardSizeX = boardSizeX;
+        this.boardSizeY = boardSizeY;    
     }
 
     public void makeMap(int worldSizeX, int worldSizeY) {
@@ -47,16 +39,17 @@ public class TheHive {
 
             boardSizeX = worldSizeX;
             boardSizeY = worldSizeY;
+            System.out.println("X: " + boardSizeX);
+            System.out.println("Y: " + boardSizeY);
 
             hiveMap = new ILocationInfo[boardSizeX][boardSizeY];
 
-            for (int y = 0; y < boardSizeY; ++y) {
+            for (int y = 0; y < boardSizeY; y++) {
                 for (int x = 0; x < boardSizeX; x++) {
                     hiveMap[x][y] = new Location(x, y);
                 }
             }
-        }
-        else{
+        } else {
             System.out.println("A map has already been made!");
         }
     }
@@ -68,7 +61,30 @@ public class TheHive {
     public void updateMap(List<ILocationInfo> visibleLocations) {
 
         for (ILocationInfo loc : visibleLocations) {
-           hiveMap[loc.getX()][loc.getY()] = loc;
+            hiveMap[loc.getX()][loc.getY()] = loc;
         }
     }
+
+    public int getBoardSizeY() {
+        return boardSizeY;
+    }
+
+    public void setBoardSizeX(int boardSizeX) {
+        this.boardSizeX = boardSizeX;
+    }
+
+    public void setBoardSizeY(int boardSizeY) {
+        this.boardSizeY = boardSizeY;
+    }
+    
+    
+
+    public ILocationInfo getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(ILocationInfo queenLoc) {
+        startPos = queenLoc;
+    }
+
 }

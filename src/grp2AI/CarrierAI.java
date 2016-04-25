@@ -26,9 +26,9 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive = TheHive.getHiveInstance();
+        hive = getHiveInstance();
         hive.makeMap(worldSizeX, worldSizeY);
-        AStarPathFinder = TheHive.getAStarInstance();
+        AStarPathFinder = getAStarInstance();
 //        hive.updateAnts();
     }
 
