@@ -348,4 +348,16 @@ public class GeneralAI {
         }
     }
 
+    //--------------------------------------------------------------------------
+    //Dig Soil - Start
+    //--------------------------------------------------------------------------
+    public EAction dig(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations){
+        EAction action = null;
+        
+        
+        
+        
+        return action;
+    }
+    
 }
