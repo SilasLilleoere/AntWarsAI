@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package grp2AI;
+package DataCollection;
 
 import aiantwars.EAntType;
 import aiantwars.IAntInfo;
@@ -22,6 +22,7 @@ import aiantwars.ILocationInfo;
 
 
 public class DataCollector {
+      //Cal is short for "Calculate".
     
     //---------------Map-----------------------
     private int mapExplored = 0;
@@ -36,8 +37,6 @@ public class DataCollector {
     
     private ILocationInfo queenStartPos;
     
-
-    //Cal is short for "Calculate".
     //---------------AntsCount-----------------
     private int warriorCount = 0;
     private int carrierCount = 0;
@@ -56,11 +55,11 @@ public class DataCollector {
     private int foodAntRatio = 0;
     private int totalFood = 0;
 
-    public void CalAttackRate() {
+    public void calAttackRate() {
         attackRate = totalAttacks / (totalTurns / attackConstant);
     }
 
-    public void CalFoodRatio() {
+    public void calFoodRatio() {
         foodAntRatio = totalFood / totalAnts;
     }
 
