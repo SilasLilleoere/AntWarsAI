@@ -65,7 +65,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-//        EAntType type;
+        EAntType type;
 //        type = policies.getEggType();
 //        switch (type.getTypeName()){
 //            case "CARRIER": {
@@ -76,6 +76,12 @@ public class QueenAI extends GeneralAI implements IAntAI {
 //                egg.set(type, Warrior);
 //            }
 //        }
+
+//--------------------------------------------------
+//--------------- TEMP WARRRIOOOORRZ---------------------
+//--------------------------------------------------
+    type = types.get(2);
+    egg.set(type, new WarriorAI());    
     }
 
     @Override

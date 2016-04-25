@@ -47,12 +47,15 @@ public class WarriorAI extends GeneralAI implements IAntAI{
         //       #2 Gather
         action = pickUpFood(thisAnt, possibleActions);
         
-        //       #3 Search n Destroy 
+        //       #3 Attack
+        action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+        
+        //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
         //  hive.searchAndDestroy();
         //  action = nextStepInSearchAndDestroy();
         
-        //       #4 Scout
+        //       #5 Scout
         action = explore(possibleActions, thisAnt, visibleLocations);
 
         if (action == null) {
