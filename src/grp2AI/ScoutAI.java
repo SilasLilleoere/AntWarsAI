@@ -34,7 +34,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override

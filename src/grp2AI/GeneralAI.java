@@ -74,11 +74,11 @@ public class GeneralAI {
     }
 
     public EAction pickUpFood(IAntInfo thisAnt, List<EAction> pA) {
-        
-            if (pA.contains(EAction.PickUpFood)) {
-                return EAction.PickUpFood;
-            }
-       
+
+        if (pA.contains(EAction.PickUpFood)) {
+            return EAction.PickUpFood;
+        }
+
         return null;
     }
 
@@ -195,11 +195,11 @@ public class GeneralAI {
     //---------------------------------------------SILAS---------------------------------------------------------------------
     public EAction explore(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
         EAction action = null;
-        boolean blind = visibleLocations.isEmpty() || visibleLocations.get(0).isFilled() || visibleLocations.get(0).isRock();
+        
 
-        if (blind && pA.contains(EAction.TurnLeft) || getAnt(visibleLocations) != null && pA.contains(EAction.TurnLeft)) {
+        if (isBlind(visibleLocations) && pA.contains(EAction.TurnLeft) || getAnt(visibleLocations) != null && pA.contains(EAction.TurnLeft)) {
             action = turnRnd(pA, thisAnt, hive);
-        } else if (!blind && pA.contains(EAction.MoveForward)) {
+        } else if (!isBlind(visibleLocations) && pA.contains(EAction.MoveForward)) {
             action = EAction.MoveForward;
             direction = "";
         }
@@ -263,50 +263,93 @@ public class GeneralAI {
         }
         return action;
     }
+    
+    public boolean isEnemy(List<ILocationInfo> visibleLocations, IAntInfo thisAnt){
+        boolean enemy = false;
+        int self = thisAnt.getTeamInfo().getTeamID();
+        int target = 0;
+       
+        IAntInfo enemyAnt = getAnt(visibleLocations);
+        
+        if(enemyAnt != null){
+            target = enemyAnt.getTeamInfo().getTeamID();
+            if(target != self){
+                enemy = true;
+            }
+        }
+        return enemy;
+    }
+
+    
+    public boolean isBlind(List<ILocationInfo> visibleLocations){
+        return visibleLocations.isEmpty() || visibleLocations.get(0).isFilled() || visibleLocations.get(0).isRock();
+    }
+    
+    public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations){
+        EAction action = null;
+        
+        if(isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)){
+            action = EAction.Attack;
+        }
+               
+        return action;
+    }
+    
+    
+    public EAction attackSelf(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
+        
+        EAction action = null;
+        
+        if(!isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)){
+            action = EAction.Attack;
+        }        
+        
+        return action;
+    }
 
     //--------------------------------------------------------------------------
     //ON ATTACK METHODS - START
     //--------------------------------------------------------------------------
-    //SPECIFIC ATTACKER AI (USED BY GETATTACKER) - START
+    //SPECIFIC BEHAVIOR VS ENEMY - START
     //--------------------------------------------------------------------------
-    public void setEnemyConditions(IAntInfo thisAnt, IAntInfo attacker) {
+    public void setEnemyConditions(IAntInfo thisAnt, IAntInfo enemy) {
         String meType = thisAnt.getAntType().getTypeName();
-        String attackerType = attacker.getAntType().getTypeName();
+        String enemyType = enemy.getAntType().getTypeName();
 
         //QUEEN
         if (meType.equalsIgnoreCase("QUEEN")) {
-            if (attackerType.equalsIgnoreCase("QUEEN")) {
+            if (enemyType.equalsIgnoreCase("QUEEN")) {
                 enemyHP = thisAnt.getHitPoints() - 1;
             } else {
                 enemyHP = 1;
             }
 
-        } else if (attackerType.equalsIgnoreCase("QUEEN")) {
+        } else if (enemyType.equalsIgnoreCase("QUEEN")) {
             enemyHP = Integer.MAX_VALUE;
 
         } //CARRIER
-        else if (meType.equalsIgnoreCase("CARRIER") && attackerType.equalsIgnoreCase("SCOUT")) {
+        else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("SCOUT")) {
             enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("CARRIER") && attackerType.equalsIgnoreCase("CARRIER")) {
+        } else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("CARRIER")) {
             enemyHP = Integer.MAX_VALUE;
 
         } //SCOUT
-        else if (meType.equalsIgnoreCase("SCOUT") && attackerType.equalsIgnoreCase("SCOUT")) {
+        else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("SCOUT")) {
             enemyHP = 4;
 
-        } else if (meType.equalsIgnoreCase("SCOUT") && attackerType.equalsIgnoreCase("CARRIER")) {
+        } else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("CARRIER")) {
             enemyHP = 4;
 
         } //WARRIOR
-        else if (meType.equalsIgnoreCase("WARRIOR") && attackerType.equalsIgnoreCase("SCOUT")) {
+        else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("SCOUT")) {
             enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("WARRIOR") && attackerType.equalsIgnoreCase("CARRIER")) {
+        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("CARRIER")) {
             enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("WARRIOR") && attackerType.equalsIgnoreCase("WARRIOR")) {
+        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("WARRIOR")) {
             enemyHP = Integer.MAX_VALUE;
 
         }//NON WARRIOR
-        else if (attackerType.equalsIgnoreCase("WARRIOR")) {
+        else if (enemyType.equalsIgnoreCase("WARRIOR")) {
             enemyHP = 1;
         } else {
             enemyHP = 1;
@@ -314,7 +357,7 @@ public class GeneralAI {
     }
 
     //--------------------------------------------------------------------------
-    //SPECIFIC ATTACKER AI (USED BY GETATTACKER) - END
+    //SPECIFIC BEHAVIOR VS ENEMY - END
     //--------------------------------------------------------------------------
     public void getAttacker(IAntInfo thisAnt, int dir, IAntInfo attacker) {
         setEnemyConditions(thisAnt, attacker);
@@ -346,6 +389,15 @@ public class GeneralAI {
         } else if (thisAnt.getDirection() < dir) {
             turnTo.add(EAction.TurnRight);
         }
+    }
+
+    //--------------------------------------------------------------------------
+    //Dig Soil 
+    //--------------------------------------------------------------------------
+    public EAction dig(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
+        EAction action = null;
+
+        return action;
     }
 
 }

@@ -18,13 +18,12 @@ import java.util.List;
  *
  * @author Silas
  */
-public class QueenAI extends GeneralAI implements IAntAI {
+public class CarrierAI extends GeneralAI implements IAntAI {
 
     //Pathfinding
     private AStar_Martin AStarPathFinder = null;
     private TheHive hive = null;
 
-    
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
         hive = TheHive.getHiveInstance();
@@ -35,29 +34,27 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        //Where am I on the map?
-        //Should I go home?
+        
     }
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         EAction action = null;
-        
-        
-        //#1 Survival
+
+        //       #1 Survival
         action = survival(thisAnt, possibleActions);
-        
-        //#2 Expand
-        action = layEgg(thisAnt, possibleActions);
-        
-        //#3 Gather
+
+        //       #2 Gather
         action = pickUpFood(thisAnt, possibleActions);
+
+        //       #3 Dig
+        action = dig(possibleActions, thisAnt, visibleLocations);
         
-        //#4 Scout
+        //       #4 Scout
         action = explore(possibleActions, thisAnt, visibleLocations);
-        
-        
-        if(action == null){
+
+       
+        if (action == null) {
             action = EAction.Pass;
         }
         return action;
@@ -65,23 +62,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-        EAntType type;
-//        type = policies.getEggType();
-//        switch (type.getTypeName()){
-//            case "CARRIER": {
-//                egg.set(type, Carrier);
-//            }case "SCOUT": {
-//                egg.set(type, Scout);
-//            }case "WARRIOR": {
-//                egg.set(type, Warrior);
-//            }
-//        }
-
-//--------------------------------------------------
-//--------------- TEMP WARRRIOOOORRZ---------------------
-//--------------------------------------------------
-    type = types.get(2);
-    egg.set(type, new WarriorAI());    
+        throw new UnsupportedOperationException("I CAN'T LAY EGGS LOL."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -93,5 +74,4 @@ public class QueenAI extends GeneralAI implements IAntAI {
     public void onDeath(IAntInfo thisAnt) {
 //        hive.updateAnts();
     }
-
 }
