@@ -148,16 +148,7 @@ public class GeneralAI {
 //        EAction fightAction = null;
 //        return fightAction;
 //    }
-    public IAntInfo antInFront() {
-
-        IAntInfo ant = null;
-
-        if (!visLocations.isEmpty()) {
-            ant = visLocations.get(0).getAnt();
-        }
-        return ant;
-    }
-
+  
     public EAction moveTo(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
 
         EAction action = null;

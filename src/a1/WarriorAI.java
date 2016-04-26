@@ -39,26 +39,29 @@ public class WarriorAI extends GeneralAI implements IAntAI{
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
-        EAction action = null;
+    EAction action = null;
 
         //       #1 Survival
         action = survival(thisAnt, possibleActions);
 
         //       #2 Gather
-        if(thisAnt.getFoodLoad() <= 2){
+        if(thisAnt.getFoodLoad() <= 2 && action == null){
         action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         }
         //       #3 Attack
+        if(action == null){
         action = attackEnemy(thisAnt, possibleActions, visibleLocations);
-        
+        }
         //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
         //  hive.searchAndDestroy();
         //  action = nextStepInSearchAndDestroy();
         
         //       #5 Scout
+        if(action == null){
         action = explore(possibleActions, thisAnt, visibleLocations);
-
+        }
+        
         if (action == null) {
             action = EAction.Pass;
         }

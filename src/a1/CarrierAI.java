@@ -47,19 +47,23 @@ public class CarrierAI extends GeneralAI implements IAntAI {
         action = survival(thisAnt, possibleActions);
 
         //       #2 Gather
-        if(thisAnt.getFoodLoad() < 15){
+        if (thisAnt.getFoodLoad() < 15 && action == null) {
             action = pickUpFood(thisAnt, possibleActions, visibleLocations);
-        }else{
+        } else if (action == null) {
             action = returnFood(thisAnt, queenLoc, worldMap, possibleActions);
         }
         //       #3 Dig
-        action = dig(possibleActions, visibleLocations);
-
+        if (action == null) {
+            action = dig(possibleActions, visibleLocations);
+        }
         //       #4 Drop
-        action = dropSoil(possibleActions, thisAnt, visibleLocations);
-        
+        if (action == null) {
+            action = dropSoil(possibleActions, thisAnt, visibleLocations);
+        }
         //       #5 Scout
-        action = explore(possibleActions, thisAnt, visibleLocations);
+        if (action == null) {
+            action = explore(possibleActions, thisAnt, visibleLocations);
+        }
 
         if (action == null) {
             action = EAction.Pass;
