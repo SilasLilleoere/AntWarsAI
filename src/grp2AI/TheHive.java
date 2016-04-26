@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class TheHive {
 
+    //Sorry, this needs to be in DataCollection---
+    private ILocationInfo currPos = null;//-------
+    //--------------------------------------------
+    
     private ILocationInfo startPos = null;
     private int boardSizeX = 0;
     private int boardSizeY = 0;
@@ -85,6 +89,14 @@ public class TheHive {
 
     public void setStartPos(ILocationInfo queenLoc) {
         startPos = queenLoc;
+    }
+
+    public ILocationInfo getCurrPos() {
+        return currPos;
+    }
+
+    public void setCurrPos(ILocationInfo currPos) {
+        this.currPos = currPos;
     }
 
 }

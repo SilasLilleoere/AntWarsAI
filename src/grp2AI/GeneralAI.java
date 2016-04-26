@@ -38,6 +38,7 @@ public class GeneralAI {
     ILocationInfo[][] worldMap = null;
     ILocationInfo goal = null;
     boolean goingHome = false;
+    ILocationInfo digLoc = null;
 
     int enemyHP = 0;
 
@@ -45,11 +46,11 @@ public class GeneralAI {
     private TheHive hive = null;
 
     public GeneralAI() {
-  
+
         this.dirList = null;
     }
 
-     public TheHive getHiveInstance() {
+    public TheHive getHiveInstance() {
 
         if (hive == null) {
             hive = new TheHive(worldSizeX, worldSizeY);
@@ -68,7 +69,7 @@ public class GeneralAI {
 
         if (thisAnt.getHitPoints() <= 17 && pA.contains(EAction.EatFood)) {
             survAction = EAction.EatFood;
-            System.out.println("ID 1: Survival metode --- HAAAAAAPPSSSS");
+            System.out.println("#1 SURV MODE INITIATED - I AINT GOIN DOWN DAWGS");
         } else {
             //findFood();
             return null;
@@ -82,20 +83,60 @@ public class GeneralAI {
 
         if (!visLocations.isEmpty() && pA.contains(EAction.LayEgg)) {
             eggAction = EAction.LayEgg;
-            System.out.println("ID 1: LayEggs metode --- LÆGGER ÆG!!!");
+            System.out.println("#2 BABY PICS INC BOIS");
         } else {
             return null;
         }
         return eggAction;
     }
 
-    public EAction pickUpFood(IAntInfo thisAnt, List<EAction> pA) {
+    public EAction pickUpFood(IAntInfo thisAnt, List<EAction> pA, List<ILocationInfo> visibleLocations) {
+        EAction action = null;
 
         if (pA.contains(EAction.PickUpFood)) {
-            return EAction.PickUpFood;
+            action = EAction.PickUpFood;
+        } else if (isFoodAhead(visibleLocations)) {
+            action = EAction.MoveForward;
         }
 
-        return null;
+        return action;
+    }
+
+    //Check visibleLocations for food
+    public boolean isFoodAhead(List<ILocationInfo> visibleLocations) {
+        boolean foodAhead = false;
+        if (visibleLocations.size() > 0) {
+            for (int i = 0; i < visibleLocations.size(); i++) {
+                if (visibleLocations.get(i).getFoodCount() > 0) {
+                    foodAhead = true;
+                }
+            }
+        }
+        return foodAhead;
+    }
+
+    //Drop food for Queen
+    public EAction returnFood(IAntInfo thisAnt, ILocationInfo queenLoc, ILocationInfo[][] worldMap, List<EAction> pA) {
+        EAction action = null;
+
+        action = moveTo(thisAnt, queenLoc, worldMap);
+
+        if (action != null) {
+            return action;
+        } else {
+            dropFood(thisAnt, pA);
+        }
+
+        return action;
+    }
+
+    public EAction dropFood(IAntInfo thisAnt, List<EAction> pA) {
+        EAction action = null;
+
+        if (thisAnt.getFoodLoad() != 0 && pA.contains(EAction.DropFood)) {
+            action = EAction.DropFood;
+        }
+        return action;
     }
 
     //This is mostly for warrior-ants.
@@ -113,7 +154,7 @@ public class GeneralAI {
         return ant;
     }
 
-    public EAction returnHome(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
+    public EAction moveTo(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
 
         EAction action = null;
         ArrayList<ILocationInfo> locList;
@@ -224,19 +265,6 @@ public class GeneralAI {
         return action;
     }
 
-    //Check visibleLocations for food
-    public boolean isFoodAhead(List<ILocationInfo> visibleLocations) {
-        boolean foodAhead = false;
-        if (visibleLocations.size() > 0) {
-            for (int i = 0; i < visibleLocations.size(); i++) {
-                if (visibleLocations.get(i).getFoodCount() > 0) {
-                    foodAhead = true;
-                }
-            }
-        }
-        return foodAhead;
-    }
-
     public IAntInfo getAnt(List<ILocationInfo> visibleLocations) {
         IAntInfo ant = null;
 
@@ -300,6 +328,10 @@ public class GeneralAI {
 
     public boolean isBlind(List<ILocationInfo> visibleLocations) {
         return visibleLocations.isEmpty() || visibleLocations.get(0).isFilled() || visibleLocations.get(0).isRock();
+    }
+
+    public boolean isNextToBlind(List<ILocationInfo> visibleLocations) {
+        return visibleLocations.get(1).isFilled() || visibleLocations.get(1).isRock();
     }
 
     public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
@@ -410,8 +442,40 @@ public class GeneralAI {
     //--------------------------------------------------------------------------
     //Dig Soil 
     //--------------------------------------------------------------------------
-    public EAction dig(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
+    public EAction dig(List<EAction> pA, List<ILocationInfo> visibleLocations) {
         EAction action = null;
+
+        if (visibleLocations.get(0).isFilled() && pA.contains(EAction.DigOut)) {
+            action = EAction.DigOut;
+            digLoc = visibleLocations.get(0);
+
+            //Drop soil at startLoc?
+            //goingHome = true;
+        }
+
+        return action;
+    }
+
+    //Not sure if "Go to start location with soil" is a good idea. 
+    //Blockage can occur in small tunnels. Comment out if needed.
+    public EAction dropSoil(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
+        EAction action = null;
+
+        if (!isBlind(visibleLocations) && !isNextToBlind(visibleLocations)) {
+            return action;
+        } else if (visibleLocations.get(0) != digLoc && !isBlind(visibleLocations) && pA.contains(EAction.DropSoil)) {
+            action = EAction.DropSoil;
+        } else {
+            //Use moveTo to A* to startLoc with Soil           
+            action = moveTo(thisAnt, hive.getStartPos(), worldMap);
+
+            if (action != null) {
+                return action;
+            } else if (!isBlind(visibleLocations) && pA.contains(EAction.DropSoil)) {
+                action = EAction.DropSoil;
+            }
+
+        }
 
         return action;
     }
