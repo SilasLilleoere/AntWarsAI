@@ -41,7 +41,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        if(turn == 15) {
+        if(turn == 20) {
         goingHome = true;
         }
         

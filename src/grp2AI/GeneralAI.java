@@ -127,6 +127,9 @@ public class GeneralAI {
                 action = nextMove(loc, thisAnt);
             }
         }
+        else {
+        goingHome = false;
+        }
         return action;
 
     }
