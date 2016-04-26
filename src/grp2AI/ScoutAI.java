@@ -45,8 +45,9 @@ public class ScoutAI extends GeneralAI implements IAntAI {
         action = survival(thisAnt, possibleActions);
 
         //#2 Gather
-        action = pickUpFood(thisAnt, possibleActions);
-
+        if(thisAnt.getFoodLoad() <= 2){
+        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+        }
         //#3 Scout
         action = explore(possibleActions, thisAnt, visibleLocations);
 

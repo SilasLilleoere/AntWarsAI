@@ -55,6 +55,9 @@ public class QueenAI extends GeneralAI implements IAntAI {
         hive.updateMap(visibleLocations);
         worldMap = hive.getMap();        
         
+        //Update current Queen location, so ants can A* to her.
+        hive.setCurrPos(thisAnt.getLocation());
+        
         //#1 Survival
         action = survival(thisAnt, possibleActions);
         
@@ -65,7 +68,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
         
         //#3 Gather
         if(action == null && !goingHome){
-        action = pickUpFood(thisAnt, possibleActions);
+        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         }
         
         //#4 Scout
@@ -74,13 +77,15 @@ public class QueenAI extends GeneralAI implements IAntAI {
         }
         
         if(goingHome){
-        action = returnHome(thisAnt, hive.getStartPos(), worldMap);
+        action = moveTo(thisAnt, hive.getStartPos(), worldMap);
         }
         
         
         if(action == null){
             action = EAction.Pass;
         }
+       
+        
         return action;
     }
 

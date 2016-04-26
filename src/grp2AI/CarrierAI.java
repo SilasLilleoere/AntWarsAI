@@ -23,6 +23,8 @@ public class CarrierAI extends GeneralAI implements IAntAI {
     //Pathfinding
     private AStar_Martin AStarPathFinder = null;
     private TheHive hive = null;
+    
+    private ILocationInfo queenLoc = null;
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
@@ -34,7 +36,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        
+        queenLoc = hive.getCurrPos();
     }
 
     @Override
@@ -45,15 +47,20 @@ public class CarrierAI extends GeneralAI implements IAntAI {
         action = survival(thisAnt, possibleActions);
 
         //       #2 Gather
-        action = pickUpFood(thisAnt, possibleActions);
-
+        if(thisAnt.getFoodLoad() < 15){
+            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+        }else{
+            action = returnFood(thisAnt, queenLoc, worldMap, possibleActions);
+        }
         //       #3 Dig
-        action = dig(possibleActions, thisAnt, visibleLocations);
+        action = dig(possibleActions, visibleLocations);
+
+        //       #4 Drop
+        action = dropSoil(possibleActions, thisAnt, visibleLocations);
         
-        //       #4 Scout
+        //       #5 Scout
         action = explore(possibleActions, thisAnt, visibleLocations);
 
-       
         if (action == null) {
             action = EAction.Pass;
         }
@@ -62,7 +69,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-        throw new UnsupportedOperationException("I CAN'T LAY EGGS LOL."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("I CAN'T LAY EGGS LOL");
     }
 
     @Override
