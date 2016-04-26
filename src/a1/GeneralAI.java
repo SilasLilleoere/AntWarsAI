@@ -1,4 +1,4 @@
-package grp2AI;
+package a1;
 
 import aiantwars.EAction;
 import aiantwars.EAntType;
@@ -7,7 +7,7 @@ import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
 import aiantwars.impl.Location;
-import astar_martin.AStar_Martin;
+import a1.astar_martin.AStar_Martin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -61,6 +61,10 @@ public class GeneralAI {
     public AStar_Martin getAStarInstance() {
         return hive.getAStarInstance();
     }
+    
+    public void resetHive(){
+    hive = null;
+    }
 
     //--------------------------------------------------------------------------
     //1. Ant-queen needs to keep itself alive.
@@ -69,7 +73,7 @@ public class GeneralAI {
 
         if (thisAnt.getHitPoints() <= 17 && pA.contains(EAction.EatFood)) {
             survAction = EAction.EatFood;
-            System.out.println("#1 SURV MODE INITIATED - I AINT GOIN DOWN DAWGS");
+            //System.out.println("#1 SURV MODE INITIATED - I AINT GOIN DOWN DAWGS");
         } else {
             //findFood();
             return null;
@@ -83,7 +87,7 @@ public class GeneralAI {
 
         if (!visLocations.isEmpty() && pA.contains(EAction.LayEgg)) {
             eggAction = EAction.LayEgg;
-            System.out.println("#2 BABY PICS INC BOIS");
+            // System.out.println("#2 BABY PICS INC BOIS");
         } else {
             return null;
         }
@@ -167,9 +171,8 @@ public class GeneralAI {
             if (!loc.isFilled() || !loc.isRock()) {
                 action = nextMove(loc, thisAnt);
             }
-        }
-        else {
-        goingHome = false;
+        } else {
+            goingHome = false;
         }
         return action;
 
@@ -256,9 +259,9 @@ public class GeneralAI {
     public EAction explore(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
         EAction action = null;
 
-        if (isBlind(visibleLocations) && pA.contains(EAction.TurnLeft) || getAnt(visibleLocations) != null && pA.contains(EAction.TurnLeft)) {
+        if (isBlind(visibleLocations, thisAnt) && pA.contains(EAction.TurnLeft) || getAnt(visibleLocations) != null && pA.contains(EAction.TurnLeft)) {
             action = turnRnd(pA, thisAnt, hive);
-        } else if (!isBlind(visibleLocations) && pA.contains(EAction.MoveForward)) {
+        } else if (!isBlind(visibleLocations, thisAnt) && pA.contains(EAction.MoveForward)) {
             action = EAction.MoveForward;
             direction = "";
         }
@@ -326,7 +329,14 @@ public class GeneralAI {
         return enemy;
     }
 
-    public boolean isBlind(List<ILocationInfo> visibleLocations) {
+    public boolean isBlind(List<ILocationInfo> visibleLocations, IAntInfo thisAnt) {
+
+        IAntInfo antInFront = getAnt(visibleLocations);
+        if (antInFront != null) {
+            if (antInFront.getTeamInfo() == thisAnt.getTeamInfo()) {
+                return true;
+            }
+        }
         return visibleLocations.isEmpty() || visibleLocations.get(0).isFilled() || visibleLocations.get(0).isRock();
     }
 
@@ -461,9 +471,9 @@ public class GeneralAI {
     public EAction dropSoil(List<EAction> pA, IAntInfo thisAnt, List<ILocationInfo> visibleLocations) {
         EAction action = null;
 
-        if (!isBlind(visibleLocations) && !isNextToBlind(visibleLocations)) {
+        if (!isBlind(visibleLocations, thisAnt) && !isNextToBlind(visibleLocations)) {
             return action;
-        } else if (visibleLocations.get(0) != digLoc && !isBlind(visibleLocations) && pA.contains(EAction.DropSoil)) {
+        } else if (visibleLocations.get(0) != digLoc && !isBlind(visibleLocations, thisAnt) && pA.contains(EAction.DropSoil)) {
             action = EAction.DropSoil;
         } else {
             //Use moveTo to A* to startLoc with Soil           
@@ -471,7 +481,7 @@ public class GeneralAI {
 
             if (action != null) {
                 return action;
-            } else if (!isBlind(visibleLocations) && pA.contains(EAction.DropSoil)) {
+            } else if (!isBlind(visibleLocations, thisAnt) && pA.contains(EAction.DropSoil)) {
                 action = EAction.DropSoil;
             }
 

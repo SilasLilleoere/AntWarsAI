@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package grp2AI;
+package a1;
 
 import aiantwars.EAction;
 import aiantwars.EAntType;
@@ -11,7 +11,7 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import astar_martin.AStar_Martin;
+import a1.astar_martin.AStar_Martin;
 import java.util.List;
 
 /**
@@ -70,6 +70,26 @@ public class ScoutAI extends GeneralAI implements IAntAI {
     @Override
     public void onDeath(IAntInfo thisAnt) {
 //        hive.updateAnts();
+    }
+
+    @Override
+    public void onStartMatch(int worldSizeX, int worldSizeY) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onStartRound(int round) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onEndRound(int yourMajor, int yourMinor, int enemyMajor, int enemyMinor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onEndMatch(int yourScore, int yourWins, int enemyScore, int enemyWins) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

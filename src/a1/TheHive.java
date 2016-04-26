@@ -1,8 +1,8 @@
-package grp2AI;
+package a1;
 
 import aiantwars.ILocationInfo;
 import aiantwars.impl.Location;
-import astar_martin.AStar_Martin;
+import a1.astar_martin.AStar_Martin;
 import java.util.List;
 
 /**
@@ -67,6 +67,10 @@ public class TheHive {
         for (ILocationInfo loc : visibleLocations) {
             hiveMap[loc.getX()][loc.getY()] = loc;
         }
+    }
+    
+    public void clearMap(){
+    hiveMap = null;
     }
 
     public int getBoardSizeY() {

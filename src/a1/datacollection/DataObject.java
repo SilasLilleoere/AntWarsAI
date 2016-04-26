@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DataCollection;
+package a1.datacollection;
 
 import aiantwars.ILocationInfo;
 
@@ -22,6 +22,9 @@ public class DataObject {
     private ILocationInfo QueenLastSpottedLoc;
     private int QueenSpottedTurn;
     private int mapExplored;
+
+    public DataObject() {
+    }
 
     public DataObject(int warriorCount, int carrierCount, int scoutCount, int totalAnts, int attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
         this.warriorCount = warriorCount;

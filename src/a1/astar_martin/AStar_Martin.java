@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package astar_martin;
+package a1.astar_martin;
 
 import aiantwars.ILocationInfo;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class AStar_Martin {
 
         //Fills the 2D array 'nodes' with Nodes and adds locations that is isFilled or IsRock to closedSet. 
         nodes = makeNodeArray(antMap);
-        System.out.println("nodes:" + nodes.length);
+        //System.out.println("nodes:" + nodes.length);
 
         start = nodes[startLoc.getX()][startLoc.getY()];
         goal = nodes[goalLoc.getX()][goalLoc.getY()];
