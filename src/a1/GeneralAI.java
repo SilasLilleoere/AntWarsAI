@@ -20,24 +20,18 @@ public class GeneralAI {
     int worldSizeY = 0;
 
     EAction turn = null;
-    int cameFrom = -1;
     ArrayList turnList = null;
     ArrayList dirList = null;
     Random ran = new Random();
     String direction = "";
-    private Location[][] location = null;
-    int eggCounter = 0;
 
-    private boolean isUnderAttack = false;
-    private boolean retaliation = false;
+    boolean retaliation = false;
     List<ILocationInfo> visLocations;
-    List turnTo = new ArrayList();
+    List<EAction> turnTo = new ArrayList();
     ILocationInfo[][] worldMap = null;
     ILocationInfo goal = null;
     boolean goingHome = false;
     ILocationInfo digLoc = null;
-
-    int enemyHP = 0;
 
     AStar_Martin AStarPathFinder = null;
     TheHive hive = null;
@@ -58,15 +52,6 @@ public class GeneralAI {
 
         if (thisAnt.getHitPoints() <= 17 && pA.contains(EAction.EatFood)) {
             survAction = EAction.EatFood;
-
-        } else if (retaliation == true && pA.contains(EAction.Attack)) {
-            survAction = EAction.Attack;
-            retaliation = false;
-        } else if (turnTo.size() > 0 && pA.contains(turnTo.get(0))) {
-            survAction = (EAction) turnTo.get(0);
-            turnTo.remove(0);
-        } else {
-            return null;
         }
 
         //updates totalFood in DataCollector if ant eats (subtracts from totalFood). 
@@ -339,19 +324,29 @@ public class GeneralAI {
         return visibleLocations.get(1).isFilled() || visibleLocations.get(1).isRock();
     }
 
-    public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
+    public EAction attackEnemy(IAntInfo thisAnt, List<EAction> pA, List<ILocationInfo> visibleLoc) {
         EAction action = null;
-        System.out.println("isEnemy: " + isEnemy(visibleLocations, thisAnt));
+        System.out.println("isEnemy: " + isEnemy(visibleLoc, thisAnt));
 
-        if (isEnemy(visibleLocations, thisAnt)) {
+        if (isEnemy(visibleLoc, thisAnt)) {
 
-            if (possibleActions.contains(EAction.Attack)) {
+            if (pA.contains(EAction.Attack)) {
                 action = EAction.Attack;
-            } else if (possibleActions.contains(EAction.PickUpFood)) {
+            } else if (pA.contains(EAction.PickUpFood)) {
                 action = EAction.PickUpFood;
             } else {
                 action = EAction.Pass;
             }
+        }
+
+        //if attacked
+        if (retaliation == true && action == null) {
+
+            if (!turnTo.isEmpty() && pA.contains(turnTo.get(0))) {
+                action = turnTo.get(0);
+                turnTo.remove(0);
+            }
+            retaliation = false;
         }
 
         return action;
@@ -373,7 +368,8 @@ public class GeneralAI {
     //--------------------------------------------------------------------------
     //SPECIFIC BEHAVIOR VS ENEMY - START
     //--------------------------------------------------------------------------
-    public void setEnemyConditions(IAntInfo thisAnt, IAntInfo enemy) {
+    public int setEnemyConditions(IAntInfo thisAnt, IAntInfo enemy) {
+        int enemyHP = 0;
         String meType = thisAnt.getAntType().getTypeName();
         String enemyType = enemy.getAntType().getTypeName();
 
@@ -415,13 +411,14 @@ public class GeneralAI {
         } else {
             enemyHP = 1;
         }
+        return enemyHP;
     }
 
     //--------------------------------------------------------------------------
     //SPECIFIC BEHAVIOR VS ENEMY - END
     //--------------------------------------------------------------------------
     public void getAttacker(IAntInfo thisAnt, int dir, IAntInfo attacker) {
-        setEnemyConditions(thisAnt, attacker);
+        int enemyHP = setEnemyConditions(thisAnt, attacker);
 
         if (attacker.getHitPoints() <= enemyHP) {
             if (thisAnt.getDirection() == dir) {
@@ -437,7 +434,10 @@ public class GeneralAI {
     //--------------------------------------------------------------------------
     //ON ATTACK METHODS - END
     //--------------------------------------------------------------------------
-    private void turnToDir(int dir, IAntInfo thisAnt) {
+    public void turnToDir(int dir, IAntInfo thisAnt) {
+
+        System.out.println("my direction: " + thisAnt.getDirection());
+
         if (thisAnt.getDirection() == 0 && dir == 3) {
             turnTo.add(EAction.TurnLeft);
         } else if (thisAnt.getDirection() == 3 && dir == 0) {
@@ -450,6 +450,12 @@ public class GeneralAI {
         } else if (thisAnt.getDirection() < dir) {
             turnTo.add(EAction.TurnRight);
         }
+
+        //if ant is facing dir, then clear turnTo array
+        if (thisAnt.getDirection() == dir) {
+            turnTo.clear();
+        }
+
     }
 
     //--------------------------------------------------------------------------

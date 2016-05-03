@@ -33,14 +33,14 @@ public class QueenAI extends GeneralAI implements IAntAI {
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
         DataObject d = hive.getData();
-        System.out.println("TotalAnts: " + d.getTotalAnts() + " TotalFood:" + d.getTotalFood());
+       // System.out.println("TotalAnts: " + d.getTotalAnts() + " TotalFood:" + d.getTotalFood());
     }
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         EAction action = null;
         hive.updateMap(visibleLocations);
-        worldMap = hive.getMap();
+        worldMap = hive.getMap();       
 
         //Update current Queen location, so ants can A* to her.
         hive.setCurrPos(thisAnt.getLocation());
@@ -82,6 +82,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
             action = EAction.Pass;
         }
 
+        System.out.println("Action: " + action.toString());
         return action;
     }
 

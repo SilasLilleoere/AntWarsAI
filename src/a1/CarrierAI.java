@@ -53,7 +53,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
         if (action == null) {
             action = dig(possibleActions, visibleLocations);
         }
-        //       #4 Drop
+        //       #4 DropSoil
         if (action == null) {
             action = dropSoil(possibleActions, thisAnt, visibleLocations);
         }

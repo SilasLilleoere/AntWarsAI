@@ -12,12 +12,15 @@ import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
 import java.util.List;
+import java.util.Stack;
 
 /**
  *
  * @author Silas
  */
 public class WarriorAI extends GeneralAI implements IAntAI {
+
+    Stack<EAction> actionQueue = new Stack();
 
     //Pathfinding
     public WarriorAI(TheHive hiveFromQueen) {
@@ -80,7 +83,9 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        getAttacker(thisAnt, dir, attacker);
+        //getAttacker(thisAnt, dir, attacker);
+        turnToDir(dir, thisAnt);
+        retaliation = true;
     }
 
     @Override
