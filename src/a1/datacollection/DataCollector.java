@@ -50,10 +50,18 @@ public class DataCollector {
     private int attackConstant = 0;
     private int totalTurns = 0;
     private int totalAttacks;
+    private int queenAttacked;
 
     //--------------FoodResources----------------
     private int foodAntRatio = 0;
     private int totalFood = 0;
+    
+  
+    
+    public void setTotalTurns(int turns){
+    this.totalTurns = turns;
+    
+    }
 
     public void calAttackRate() {
         attackRate = totalAttacks / (totalTurns / attackConstant);
@@ -76,7 +84,7 @@ public class DataCollector {
     }
     
     public DataObject getDataObject(){
-    DataObject o = new DataObject(warriorCount, carrierCount, scoutCount, totalAnts, attackRate, foodAntRatio, QueenLastSpottedLoc, QueenSpottedTurn, mapExplored);
+    DataObject o = new DataObject(totalTurns, warriorCount, carrierCount, scoutCount, totalAnts, attackRate, foodAntRatio, QueenLastSpottedLoc, QueenSpottedTurn, mapExplored);
     return o;
     }
 

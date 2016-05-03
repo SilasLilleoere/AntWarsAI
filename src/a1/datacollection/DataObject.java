@@ -13,6 +13,7 @@ import aiantwars.ILocationInfo;
  */
 public class DataObject {
 
+    private int totalTurns;
     private int warriorCount;
     private int carrierCount;
     private int scoutCount;
@@ -26,7 +27,9 @@ public class DataObject {
     public DataObject() {
     }
 
-    public DataObject(int warriorCount, int carrierCount, int scoutCount, int totalAnts, int attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
+    public DataObject(int turns, int warriorCount, int carrierCount, int scoutCount, int totalAnts, int attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
+
+        this.totalTurns = turns;
         this.warriorCount = warriorCount;
         this.carrierCount = carrierCount;
         this.scoutCount = scoutCount;
@@ -36,6 +39,46 @@ public class DataObject {
         this.QueenLastSpottedLoc = QueenLastSpotted;
         this.QueenSpottedTurn = QueenSpottedTurn;
         this.mapExplored = mapExploredProcentage;
+    }
+
+    public int getTurns() {
+        return totalTurns;
+    }
+
+    public int getWarriorCount() {
+        return warriorCount;
+    }
+
+    public int getCarrierCount() {
+        return carrierCount;
+    }
+
+    public int getScoutCount() {
+        return scoutCount;
+    }
+
+    public int getTotalAnts() {
+        return totalAnts;
+    }
+
+    public int getAttackRate() {
+        return attackRate;
+    }
+
+    public int getFoodAntRatio() {
+        return foodAntRatio;
+    }
+
+    public ILocationInfo getQueenLastSpottedLoc() {
+        return QueenLastSpottedLoc;
+    }
+
+    public int getQueenSpottedTurn() {
+        return QueenSpottedTurn;
+    }
+
+    public int getMapExplored() {
+        return mapExplored;
     }
 
 }
