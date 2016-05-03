@@ -61,9 +61,9 @@ public class GeneralAI {
     public AStar_Martin getAStarInstance() {
         return hive.getAStarInstance();
     }
-    
-    public void resetHive(){
-    hive = null;
+
+    public void resetHive() {
+        hive = null;
     }
 
     //--------------------------------------------------------------------------
@@ -73,9 +73,14 @@ public class GeneralAI {
 
         if (thisAnt.getHitPoints() <= 17 && pA.contains(EAction.EatFood)) {
             survAction = EAction.EatFood;
-            //System.out.println("#1 SURV MODE INITIATED - I AINT GOIN DOWN DAWGS");
+            
+        } else if (retaliation == true && pA.contains(EAction.Attack)) {
+            survAction = EAction.Attack;
+            retaliation = false;
+        } else if (turnTo.size() > 0 && pA.contains(turnTo.get(0))) {
+            survAction = (EAction) turnTo.get(0);
+            turnTo.remove(0);
         } else {
-            //findFood();
             return null;
         }
         return survAction;
@@ -87,7 +92,7 @@ public class GeneralAI {
 
         if (!visLocations.isEmpty() && pA.contains(EAction.LayEgg)) {
             eggAction = EAction.LayEgg;
-            // System.out.println("#2 BABY PICS INC BOIS");
+            
         } else {
             return null;
         }
@@ -148,7 +153,6 @@ public class GeneralAI {
 //        EAction fightAction = null;
 //        return fightAction;
 //    }
-  
     public EAction moveTo(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
 
         EAction action = null;

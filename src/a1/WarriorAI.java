@@ -44,13 +44,15 @@ public class WarriorAI extends GeneralAI implements IAntAI{
         //       #1 Survival
         action = survival(thisAnt, possibleActions);
 
-        //       #2 Gather
-        if(thisAnt.getFoodLoad() <= 2 && action == null){
-        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
-        }
-        //       #3 Attack
+        
+        //       #2 Attack
         if(action == null){
         action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+        }
+        
+        //       #3 Gather
+        if(thisAnt.getFoodLoad() < 2 && action == null){
+        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         }
         //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
