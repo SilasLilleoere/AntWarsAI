@@ -109,7 +109,6 @@ public class DataCollector {
             }
         }
         if (isAlive) {
-            System.out.println("counts in dataCollector!");
             totalAnts++;
         } else if (!isAlive) {
             totalAnts--;

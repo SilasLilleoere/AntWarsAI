@@ -45,8 +45,8 @@ public class TheHive {
 
             boardSizeX = worldSizeX;
             boardSizeY = worldSizeY;
-            System.out.println("X: " + boardSizeX);
-            System.out.println("Y: " + boardSizeY);
+//            System.out.println("X: " + boardSizeX);
+//            System.out.println("Y: " + boardSizeY);
 
             hiveMap = new ILocationInfo[boardSizeX][boardSizeY];
 
@@ -106,7 +106,6 @@ public class TheHive {
     //-----------------------DATACOLLECTOR METHODS-----------------------------------------
     public void updateAnts(IAntInfo thisAnt, boolean isAlive) {
         d.updateAnts(thisAnt, isAlive);
-        System.out.println("update ant runs!");
     }
 
     public void updateFood(Boolean hasEaten) {

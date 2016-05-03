@@ -18,9 +18,8 @@ import java.util.List;
  *
  * @author Silas
  */
-public class QueenAI extends GeneralAI implements IAntAI {   
-    
-    
+public class QueenAI extends GeneralAI implements IAntAI {
+
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
         this.worldSizeX = worldSizeX;
@@ -35,45 +34,54 @@ public class QueenAI extends GeneralAI implements IAntAI {
     public void onStartTurn(IAntInfo thisAnt, int turn) {
         DataObject d = hive.getData();
         System.out.println("TotalAnts: " + d.getTotalAnts() + " TotalFood:" + d.getTotalFood());
-        //Where am I on the map?
-        //Should I go home?
     }
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         EAction action = null;
         hive.updateMap(visibleLocations);
-        worldMap = hive.getMap();        
-        
+        worldMap = hive.getMap();
+
         //Update current Queen location, so ants can A* to her.
         hive.setCurrPos(thisAnt.getLocation());
-        
+
         //#1 Survival
         action = survival(thisAnt, possibleActions);
-        
+
         //#2 Expand
-        if(action == null && !goingHome){
-        action = layEgg(thisAnt, possibleActions, visibleLocations);
+        if (action == null && !goingHome) {
+             
+            action = layEgg(thisAnt, possibleActions, visibleLocations);
+            if(action != null){
+          //  System.out.println("Queen: Expand");
+            }
         }
-        
+
         //#3 Gather
-        if(action == null && !goingHome){
-        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+        if (action == null && !goingHome) {
+            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+             if(action != null){
+          //  System.out.println("Queen: Gather");
+            }
         }
         
         //#4 Scout
-        if(action == null && !goingHome){
-        action = explore(possibleActions, thisAnt, visibleLocations);
+        if (action == null && !goingHome) {
+            action = explore(possibleActions, thisAnt, visibleLocations);
+            if(action != null){
+          //  System.out.println("Queen: Scout");
+            }
         }
-        
-        if(goingHome){
-        action = moveTo(thisAnt, hive.getStartPos(), worldMap);
-        }        
-        
-        if(action == null){
+
+        //going home for food or is attacked!
+        if (goingHome) {
+            action = moveTo(thisAnt, hive.getStartPos(), worldMap);
+        }
+
+        if (action == null) {
             action = EAction.Pass;
-        }       
-        
+        }
+
         return action;
     }
 
@@ -94,8 +102,8 @@ public class QueenAI extends GeneralAI implements IAntAI {
 //--------------------------------------------------
 //--------------- TEMP WARRRIOOOORRZ---------------------
 //--------------------------------------------------
-    type = types.get(2);
-    egg.set(type, new WarriorAI(hive));    
+        type = types.get(2);
+        egg.set(type, new WarriorAI(hive));
     }
 
     @Override
@@ -111,12 +119,12 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartMatch(int worldSizeX, int worldSizeY) {
-        
+
     }
 
     @Override
     public void onStartRound(int round) {
-        
+
     }
 
     @Override

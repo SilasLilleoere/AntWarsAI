@@ -20,10 +20,8 @@ import java.util.List;
 public class WarriorAI extends GeneralAI implements IAntAI {
 
     //Pathfinding
-
-    
-    public WarriorAI (TheHive hiveFromQueen){
-    this.hive = hiveFromQueen;
+    public WarriorAI(TheHive hiveFromQueen) {
+        this.hive = hiveFromQueen;
     }
 
     @Override
@@ -47,10 +45,13 @@ public class WarriorAI extends GeneralAI implements IAntAI {
         //       #2 Attack
         if (action == null) {
             action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+            if (action != null) {
+                System.out.println("Warrior: attack");
+            }
         }
 
         //       #3 Gather
-        if (thisAnt.getFoodLoad() < 2 && action == null) {
+        if (thisAnt.getFoodLoad() < 4 && action == null) {
             action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         }
         //       #4 Search n Destroy 
@@ -61,6 +62,9 @@ public class WarriorAI extends GeneralAI implements IAntAI {
         //       #5 Scout
         if (action == null) {
             action = explore(possibleActions, thisAnt, visibleLocations);
+            if (action != null) {
+                //System.out.println("Warrior: scout");
+            }
         }
 
         if (action == null) {

@@ -94,9 +94,10 @@ public class GeneralAI {
 
         if (pA.contains(EAction.PickUpFood)) {
             action = EAction.PickUpFood;
-        } else if (isFoodAhead(visibleLocations)) {
-            action = EAction.MoveForward;
         }
+ //       else if (isFoodAhead(visibleLocations)) {
+//            action = EAction.MoveForward;
+//        }
 
         //updates totalFood in DataCollector if ant pick up food (adds to totalFood). 
         if (action == EAction.PickUpFood) {
@@ -130,7 +131,6 @@ public class GeneralAI {
         } else {
             dropFood(thisAnt, pA);
         }
-
         return action;
     }
 
@@ -341,9 +341,17 @@ public class GeneralAI {
 
     public EAction attackEnemy(IAntInfo thisAnt, List<EAction> possibleActions, List<ILocationInfo> visibleLocations) {
         EAction action = null;
+        System.out.println("isEnemy: " + isEnemy(visibleLocations, thisAnt));
 
-        if (isEnemy(visibleLocations, thisAnt) && possibleActions.contains(EAction.Attack)) {
-            action = EAction.Attack;
+        if (isEnemy(visibleLocations, thisAnt)) {
+
+            if (possibleActions.contains(EAction.Attack)) {
+                action = EAction.Attack;
+            } else if (possibleActions.contains(EAction.PickUpFood)) {
+                action = EAction.PickUpFood;
+            } else {
+                action = EAction.Pass;
+            }
         }
 
         return action;
