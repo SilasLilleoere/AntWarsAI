@@ -21,14 +21,16 @@ import java.util.List;
 public class CarrierAI extends GeneralAI implements IAntAI {
 
     //Pathfinding
-    private AStar_Martin AStarPathFinder = null;
-    private TheHive hive = null;
-
     private ILocationInfo queenLoc = null;
+
+    public CarrierAI(TheHive hiveFromQueen) {
+        this.hive = hiveFromQueen;
+    }
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
         hive.updateAnts(thisAnt, true);
+        AStarPathFinder = hive.getAStarInstance();
     }
 
     @Override
@@ -38,28 +40,38 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
+
+        hive.updateMap(visibleLocations);
+        worldMap = hive.getMap();
         EAction action = null;
 
         //       #1 Survival
         action = survival(thisAnt, possibleActions);
 
         //       #2 Gather
-        if (thisAnt.getFoodLoad() < 15 && action == null) {
-            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
-        } else if (action == null) {
-            action = returnFood(thisAnt, hive.getStartPos(), worldMap, possibleActions);
+        if (action == null) {
+            action = gatherFood(thisAnt, possibleActions);
         }
+        
+         if (action == null) {
+            action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+        }
+
         //       #3 Dig
-        if (action == null) {
-            action = dig(possibleActions, visibleLocations);
-        }
-        //       #4 DropSoil
-        if (action == null) {
-            action = dropSoil(possibleActions, thisAnt, visibleLocations);
-        }
+//        if (action == null) {
+//            action = dig(possibleActions, visibleLocations);
+//        }
+//        //       #4 DropSoil
+//        if (action == null) {
+//            action = dropSoil(possibleActions, thisAnt, visibleLocations);
+//        }
         //       #5 Scout
         if (action == null) {
             action = explore(possibleActions, thisAnt, visibleLocations);
+        }
+
+        if (goingHome) {
+            action = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
         }
 
         if (action == null) {
@@ -75,7 +87,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        getAttacker(thisAnt, dir, attacker);
+        decideAttackRespons(dir, thisAnt, attacker);
     }
 
     @Override

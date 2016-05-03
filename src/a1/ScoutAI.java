@@ -24,9 +24,14 @@ public class ScoutAI extends GeneralAI implements IAntAI {
     private AStar_Martin AStarPathFinder = null;
     private TheHive hive = null;
 
+    public ScoutAI(TheHive hiveFromQueen) {
+        this.hive = hiveFromQueen;
+    }
+
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
         hive.updateAnts(thisAnt, true);
+        AStarPathFinder = hive.getAStarInstance();
     }
 
     @Override
@@ -43,7 +48,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
         //#2 Gather
         if (thisAnt.getFoodLoad() <= 2 && action == null) {
-            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+            action = pickUpFood(thisAnt, possibleActions);
         }
         //#3 Scout
         if (action == null) {

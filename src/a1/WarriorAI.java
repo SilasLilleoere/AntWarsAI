@@ -55,7 +55,7 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
         //       #3 Gather
         if (thisAnt.getFoodLoad() < 4 && action == null) {
-            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+            action = pickUpFood(thisAnt, possibleActions);
         }
         //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
@@ -83,9 +83,7 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        //getAttacker(thisAnt, dir, attacker);
-        turnToDir(dir, thisAnt);
-        retaliation = true;
+        decideAttackRespons(dir, thisAnt, attacker);
     }
 
     @Override

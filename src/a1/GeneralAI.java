@@ -4,7 +4,6 @@ import aiantwars.EAction;
 
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
-import aiantwars.impl.Location;
 import a1.astar_martin.AStar_Martin;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,27 @@ public class GeneralAI {
         return eggAction;
     }
 
-    public EAction pickUpFood(IAntInfo thisAnt, List<EAction> pA, List<ILocationInfo> visibleLocations) {
+    public EAction gatherFood(IAntInfo thisAnt, List<EAction> pA) {
+        EAction action = null;
+        boolean ifHome = thisAnt.getLocation().getY() == hive.getStartPos().getY();
+
+        if (ifHome && thisAnt.getFoodLoad() > 2) {
+            goingHome = false;
+            action = EAction.DropFood;
+        }
+
+        if (!ifHome && thisAnt.getFoodLoad() < 10 && pA.contains(EAction.PickUpFood) && action == null) {
+            action = EAction.PickUpFood;
+        }
+
+        if (thisAnt.getFoodLoad() >= 10 && action == null) {
+            goingHome = true;
+        }
+
+        return action;
+    }
+
+    public EAction pickUpFood(IAntInfo thisAnt, List<EAction> pA) {
         EAction action = null;
 
         if (pA.contains(EAction.PickUpFood)) {
@@ -114,7 +133,7 @@ public class GeneralAI {
         if (action != null) {
             return action;
         } else {
-            dropFood(thisAnt, pA);
+            action = dropFood(thisAnt, pA);
         }
         return action;
     }
@@ -140,6 +159,7 @@ public class GeneralAI {
 //    }
     public EAction moveTo(IAntInfo thisAnt, ILocationInfo goal, ILocationInfo[][] worldMap) {
 
+        // System.out.println("Carrier WorldMap: ");
         EAction action = null;
         ArrayList<ILocationInfo> locList;
         locList = hive.getAStarInstance().findShortestPath(thisAnt.getLocation(), goal, worldMap);
@@ -326,7 +346,6 @@ public class GeneralAI {
 
     public EAction attackEnemy(IAntInfo thisAnt, List<EAction> pA, List<ILocationInfo> visibleLoc) {
         EAction action = null;
-        System.out.println("isEnemy: " + isEnemy(visibleLoc, thisAnt));
 
         if (isEnemy(visibleLoc, thisAnt)) {
 
@@ -417,8 +436,14 @@ public class GeneralAI {
     //--------------------------------------------------------------------------
     //SPECIFIC BEHAVIOR VS ENEMY - END
     //--------------------------------------------------------------------------
+    // Silas method
     public void getAttacker(IAntInfo thisAnt, int dir, IAntInfo attacker) {
         int enemyHP = setEnemyConditions(thisAnt, attacker);
+
+        if (attacker.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
+            turnToDir(dir, thisAnt);
+            retaliation = true;
+        }
 
         if (attacker.getHitPoints() <= enemyHP) {
             if (thisAnt.getDirection() == dir) {
@@ -431,12 +456,37 @@ public class GeneralAI {
         }
     }
 
+    // Martin method
+    public void decideAttackRespons(int dir, IAntInfo thisAnt, IAntInfo attacker) {
+
+        String thisAntT = thisAnt.getAntType().getTypeName();
+        String attackerT = attacker.getAntType().getTypeName();
+
+        if (attackerT.equalsIgnoreCase("QUEEN")) {
+            turnToDir(dir, thisAnt);
+            retaliation = true;
+            return;
+        } else if (thisAntT.equalsIgnoreCase("QUEEN")) {
+            retaliation = false;
+            goingHome = true;
+            return;
+        } else if (thisAntT.equalsIgnoreCase("SCOUT") || thisAntT.equalsIgnoreCase("CARRIER")) {
+            if (attackerT.equalsIgnoreCase("WARRIOR")) {
+                retaliation = false;
+                goingHome = true;
+            } else {
+                retaliation = true;
+            }
+        } else {
+            turnToDir(dir, thisAnt);
+            retaliation = true;
+        }
+    }
+
     //--------------------------------------------------------------------------
     //ON ATTACK METHODS - END
     //--------------------------------------------------------------------------
     public void turnToDir(int dir, IAntInfo thisAnt) {
-
-        System.out.println("my direction: " + thisAnt.getDirection());
 
         if (thisAnt.getDirection() == 0 && dir == 3) {
             turnTo.add(EAction.TurnLeft);

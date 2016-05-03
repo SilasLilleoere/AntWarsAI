@@ -59,7 +59,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
         //#3 Gather
         if (action == null && !goingHome) {
-            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+            action = pickUpFood(thisAnt, possibleActions);
              if(action != null){
           //  System.out.println("Queen: Gather");
             }
@@ -75,14 +75,14 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
         //going home for food or is attacked!
         if (goingHome) {
-            action = moveTo(thisAnt, hive.getStartPos(), worldMap);
+            action = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
         }
 
         if (action == null) {
             action = EAction.Pass;
         }
 
-        System.out.println("Action: " + action.toString());
+       // System.out.println("Action: " + action.toString());
         return action;
     }
 
@@ -103,8 +103,8 @@ public class QueenAI extends GeneralAI implements IAntAI {
 //--------------------------------------------------
 //--------------- TEMP WARRRIOOOORRZ---------------------
 //--------------------------------------------------
-        type = types.get(2);
-        egg.set(type, new WarriorAI(hive));
+        type = types.get(0);
+        egg.set(type, new CarrierAI(hive));
     }
 
     @Override

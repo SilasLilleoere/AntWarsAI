@@ -42,6 +42,7 @@ public class TheHive {
     public void makeMap(int worldSizeX, int worldSizeY) {
 
         if (hiveMap == null) {
+            System.out.println("The Map was made!");
 
             boardSizeX = worldSizeX;
             boardSizeY = worldSizeY;
