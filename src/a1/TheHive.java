@@ -3,6 +3,9 @@ package a1;
 import aiantwars.ILocationInfo;
 import aiantwars.impl.Location;
 import a1.astar_martin.AStar_Martin;
+import a1.datacollection.DataCollector;
+import a1.datacollection.DataObject;
+import aiantwars.IAntInfo;
 import java.util.List;
 
 /**
@@ -14,13 +17,13 @@ public class TheHive {
     //Sorry, this needs to be in DataCollection---
     private ILocationInfo currPos = null;//-------
     //--------------------------------------------
-    
+
     private ILocationInfo startPos = null;
     private int boardSizeX = 0;
     private int boardSizeY = 0;
     private ILocationInfo[][] hiveMap = null;
     private AStar_Martin AStarInstance = null;
-    private TheHive hiveInstance;
+    private DataCollector d = new DataCollector();
 
     public AStar_Martin getAStarInstance() {
 
@@ -31,10 +34,9 @@ public class TheHive {
         return AStarInstance;
     }
 
-    
-    public TheHive(int boardSizeX, int boardSizeY){
+    public TheHive(int boardSizeX, int boardSizeY) {
         this.boardSizeX = boardSizeX;
-        this.boardSizeY = boardSizeY;    
+        this.boardSizeY = boardSizeY;
     }
 
     public void makeMap(int worldSizeX, int worldSizeY) {
@@ -68,9 +70,9 @@ public class TheHive {
             hiveMap[loc.getX()][loc.getY()] = loc;
         }
     }
-    
-    public void clearMap(){
-    hiveMap = null;
+
+    public void clearMap() {
+        hiveMap = null;
     }
 
     public int getBoardSizeY() {
@@ -84,8 +86,6 @@ public class TheHive {
     public void setBoardSizeY(int boardSizeY) {
         this.boardSizeY = boardSizeY;
     }
-    
-    
 
     public ILocationInfo getStartPos() {
         return startPos;
@@ -103,4 +103,17 @@ public class TheHive {
         this.currPos = currPos;
     }
 
+    //-----------------------DATACOLLECTOR METHODS-----------------------------------------
+    public void updateAnts(IAntInfo thisAnt, boolean isAlive) {
+        d.updateAnts(thisAnt, isAlive);
+        System.out.println("update ant runs!");
+    }
+
+    public void updateFood(Boolean hasEaten) {
+        d.updateFood(hasEaten);
+    }
+
+    public DataObject getData() {
+        return d.getDataObject();
+    }
 }

@@ -11,37 +11,30 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import a1.astar_martin.AStar_Martin;
+import a1.datacollection.DataObject;
 import java.util.List;
 
 /**
  *
  * @author Silas
  */
-public class QueenAI extends GeneralAI implements IAntAI {
+public class QueenAI extends GeneralAI implements IAntAI {   
     
-    
-
-    //Pathfinding
-    private AStar_Martin AStarPathFinder = null;
-    private TheHive hive = null;
-
     
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
         this.worldSizeX = worldSizeX;
         this.worldSizeY = worldSizeY;
-        hive = getHiveInstance();
-        hive.makeMap(worldSizeX, worldSizeY);
+        hive = new TheHive(worldSizeX, worldSizeY);
+        hive.makeMap(worldSizeX, worldSizeY); //only queen should make map
         hive.setStartPos(thisAnt.getLocation());
-        AStarPathFinder = getAStarInstance();
-        
-        //hive.updateAnts(true);
+        hive.updateAnts(thisAnt, true);
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        
+        DataObject d = hive.getData();
+        System.out.println("TotalAnts: " + d.getTotalAnts() + " TotalFood:" + d.getTotalFood());
         //Where am I on the map?
         //Should I go home?
     }
@@ -102,7 +95,7 @@ public class QueenAI extends GeneralAI implements IAntAI {
 //--------------- TEMP WARRRIOOOORRZ---------------------
 //--------------------------------------------------
     type = types.get(2);
-    egg.set(type, new WarriorAI());    
+    egg.set(type, new WarriorAI(hive));    
     }
 
     @Override
@@ -118,12 +111,12 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onStartMatch(int worldSizeX, int worldSizeY) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void onStartRound(int round) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override

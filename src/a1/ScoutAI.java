@@ -26,10 +26,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive = getHiveInstance();
-        hive.makeMap(worldSizeX, worldSizeY);
-        AStarPathFinder = getAStarInstance();
-//        hive.updateAnts();
+        hive.updateAnts(thisAnt, true);
     }
 
     @Override
@@ -70,7 +67,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onDeath(IAntInfo thisAnt) {
-//        hive.updateAnts();
+        hive.updateAnts(thisAnt, false);
     }
 
     @Override

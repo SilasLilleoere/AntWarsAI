@@ -50,7 +50,7 @@ public class DataCollector {
     private int attackConstant = 0;
     private int totalTurns = 0;
     private int totalAttacks;
-    private int queenAttacked;
+    private int queenAttackedAtTurn = -1;
 
     //--------------FoodResources----------------
     private int foodAntRatio = 0;
@@ -75,6 +75,8 @@ public class DataCollector {
         totalAttacks++;
     }
 
+    //Note: food that as been added to one of the food-supply locations, will be
+    //considered a part of the totalFood supply for the ants.
     public void updateFood(Boolean hasEaten) {
         if (!hasEaten) {
             totalFood++;
@@ -84,7 +86,7 @@ public class DataCollector {
     }
     
     public DataObject getDataObject(){
-    DataObject o = new DataObject(totalTurns, warriorCount, carrierCount, scoutCount, totalAnts, attackRate, foodAntRatio, QueenLastSpottedLoc, QueenSpottedTurn, mapExplored);
+    DataObject o = new DataObject(totalTurns, totalFood, warriorCount, carrierCount, scoutCount, totalAnts, attackRate, foodAntRatio, QueenLastSpottedLoc, QueenSpottedTurn, mapExplored);
     return o;
     }
 
@@ -107,13 +109,10 @@ public class DataCollector {
             }
         }
         if (isAlive) {
+            System.out.println("counts in dataCollector!");
             totalAnts++;
         } else if (!isAlive) {
             totalAnts--;
         }
-    }
-
-    public static void main(String[] args) {
-        DataCollector s = new DataCollector();
     }
 }

@@ -44,6 +44,7 @@ public class Policies {
             currentState = startState;
         } else {
 
+            //if ants get attacked often, go to defendstate.
             if (data.getAttackRate() > 1) {
                 currentState = defendState;
             }

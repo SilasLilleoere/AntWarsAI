@@ -11,59 +11,58 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import a1.astar_martin.AStar_Martin;
 import java.util.List;
 
 /**
  *
  * @author Silas
  */
-public class WarriorAI extends GeneralAI implements IAntAI{
+public class WarriorAI extends GeneralAI implements IAntAI {
 
     //Pathfinding
-    private AStar_Martin AStarPathFinder = null;
-    private TheHive hive = null;
+
+    
+    public WarriorAI (TheHive hiveFromQueen){
+    this.hive = hiveFromQueen;
+    }
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive = getHiveInstance();
-        hive.makeMap(worldSizeX, worldSizeY);
-        AStarPathFinder = getAStarInstance();
-//        hive.updateAnts();
+        hive.updateAnts(thisAnt, true);
+        AStarPathFinder = hive.getAStarInstance();
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        
+
     }
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
-    EAction action = null;
+        EAction action = null;
 
         //       #1 Survival
         action = survival(thisAnt, possibleActions);
 
-        
         //       #2 Attack
-        if(action == null){
-        action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+        if (action == null) {
+            action = attackEnemy(thisAnt, possibleActions, visibleLocations);
         }
-        
+
         //       #3 Gather
-        if(thisAnt.getFoodLoad() < 2 && action == null){
-        action = pickUpFood(thisAnt, possibleActions, visibleLocations);
+        if (thisAnt.getFoodLoad() < 2 && action == null) {
+            action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         }
         //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
         //  hive.searchAndDestroy();
         //  action = nextStepInSearchAndDestroy();
-        
+
         //       #5 Scout
-        if(action == null){
-        action = explore(possibleActions, thisAnt, visibleLocations);
+        if (action == null) {
+            action = explore(possibleActions, thisAnt, visibleLocations);
         }
-        
+
         if (action == null) {
             action = EAction.Pass;
         }
@@ -82,8 +81,8 @@ public class WarriorAI extends GeneralAI implements IAntAI{
 
     @Override
     public void onDeath(IAntInfo thisAnt) {
-//        hive.updateAnts();
-    }    
+        hive.updateAnts(thisAnt, false);
+    }
 
     @Override
     public void onStartMatch(int worldSizeX, int worldSizeY) {

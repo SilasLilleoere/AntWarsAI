@@ -23,15 +23,12 @@ public class CarrierAI extends GeneralAI implements IAntAI {
     //Pathfinding
     private AStar_Martin AStarPathFinder = null;
     private TheHive hive = null;
-    
+
     private ILocationInfo queenLoc = null;
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive = getHiveInstance();
-        hive.makeMap(worldSizeX, worldSizeY);
-        AStarPathFinder = getAStarInstance();
-//        hive.updateAnts();
+        hive.updateAnts(thisAnt, true);
     }
 
     @Override
@@ -50,7 +47,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
         if (thisAnt.getFoodLoad() < 15 && action == null) {
             action = pickUpFood(thisAnt, possibleActions, visibleLocations);
         } else if (action == null) {
-            action = returnFood(thisAnt, queenLoc, worldMap, possibleActions);
+            action = returnFood(thisAnt, hive.getStartPos(), worldMap, possibleActions);
         }
         //       #3 Dig
         if (action == null) {
@@ -83,7 +80,7 @@ public class CarrierAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onDeath(IAntInfo thisAnt) {
-//        hive.updateAnts();
+        hive.updateAnts(thisAnt, false);
     }
 
     @Override

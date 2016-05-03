@@ -1,17 +1,14 @@
 package a1;
 
 import aiantwars.EAction;
-import aiantwars.EAntType;
-import aiantwars.IAntAI;
+
 import aiantwars.IAntInfo;
-import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
 import aiantwars.impl.Location;
 import a1.astar_martin.AStar_Martin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
 /**
  *
@@ -42,24 +39,12 @@ public class GeneralAI {
 
     int enemyHP = 0;
 
-    private AStar_Martin AStarPathFinder = null;
-    private TheHive hive = null;
+    AStar_Martin AStarPathFinder = null;
+    TheHive hive = null;
 
     public GeneralAI() {
 
         this.dirList = null;
-    }
-
-    public TheHive getHiveInstance() {
-
-        if (hive == null) {
-            hive = new TheHive(worldSizeX, worldSizeY);
-        }
-        return hive;
-    }
-
-    public AStar_Martin getAStarInstance() {
-        return hive.getAStarInstance();
     }
 
     public void resetHive() {
@@ -73,7 +58,7 @@ public class GeneralAI {
 
         if (thisAnt.getHitPoints() <= 17 && pA.contains(EAction.EatFood)) {
             survAction = EAction.EatFood;
-            
+
         } else if (retaliation == true && pA.contains(EAction.Attack)) {
             survAction = EAction.Attack;
             retaliation = false;
@@ -82,6 +67,11 @@ public class GeneralAI {
             turnTo.remove(0);
         } else {
             return null;
+        }
+
+        //updates totalFood in DataCollector if ant eats (subtracts from totalFood). 
+        if (survAction == EAction.EatFood) {
+            hive.updateFood(true);
         }
         return survAction;
     }
@@ -92,7 +82,7 @@ public class GeneralAI {
 
         if (!visLocations.isEmpty() && pA.contains(EAction.LayEgg)) {
             eggAction = EAction.LayEgg;
-            
+
         } else {
             return null;
         }
@@ -106,6 +96,11 @@ public class GeneralAI {
             action = EAction.PickUpFood;
         } else if (isFoodAhead(visibleLocations)) {
             action = EAction.MoveForward;
+        }
+
+        //updates totalFood in DataCollector if ant pick up food (adds to totalFood). 
+        if (action == EAction.PickUpFood) {
+            hive.updateFood(false);
         }
 
         return action;
@@ -125,10 +120,10 @@ public class GeneralAI {
     }
 
     //Drop food for Queen
-    public EAction returnFood(IAntInfo thisAnt, ILocationInfo queenLoc, ILocationInfo[][] worldMap, List<EAction> pA) {
+    public EAction returnFood(IAntInfo thisAnt, ILocationInfo moveLoc, ILocationInfo[][] worldMap, List<EAction> pA) {
         EAction action = null;
 
-        action = moveTo(thisAnt, queenLoc, worldMap);
+        action = moveTo(thisAnt, moveLoc, worldMap);
 
         if (action != null) {
             return action;
@@ -145,6 +140,11 @@ public class GeneralAI {
         if (thisAnt.getFoodLoad() != 0 && pA.contains(EAction.DropFood)) {
             action = EAction.DropFood;
         }
+
+        if (thisAnt.getLocation() != hive.getStartPos() && action != null) {
+            hive.updateFood(true);
+        }
+
         return action;
     }
 
