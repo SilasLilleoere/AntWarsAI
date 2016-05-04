@@ -41,18 +41,24 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
+
+        //--------------------------------------------
+        pA = possibleActions;
+        visLoc = visibleLocations;
+        hive.updateMap(visibleLocations);
         EAction action = null;
+        //---------------------------------------------
 
         //#1 Survival
-        action = survival(thisAnt, possibleActions);
+        action = survival(thisAnt);
 
         //#2 Gather
         if (thisAnt.getFoodLoad() <= 2 && action == null) {
-            action = pickUpFood(thisAnt, possibleActions);
+            action = pickUpFood(thisAnt);
         }
         //#3 Scout
         if (action == null) {
-            action = explore(possibleActions, thisAnt, visibleLocations);
+            action = explore(thisAnt);
         }
         if (action == null) {
             action = EAction.Pass;

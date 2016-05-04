@@ -40,14 +40,20 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
+
+        //--------------------------------------------
+        pA = possibleActions;
+        visLoc = visibleLocations;
+        hive.updateMap(visibleLocations);
         EAction action = null;
+        //---------------------------------------------
 
         //       #1 Survival
-        action = survival(thisAnt, possibleActions);
+        action = survival(thisAnt);
 
         //       #2 Attack
         if (action == null) {
-            action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+            action = attackEnemy(thisAnt);
             if (action != null) {
                 System.out.println("Warrior: attack");
             }
@@ -55,7 +61,7 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
         //       #3 Gather
         if (thisAnt.getFoodLoad() < 4 && action == null) {
-            action = pickUpFood(thisAnt, possibleActions);
+            action = pickUpFood(thisAnt);
         }
         //       #4 Search n Destroy 
         //       Might be relocated to GeneralAI
@@ -64,7 +70,7 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
         //       #5 Scout
         if (action == null) {
-            action = explore(possibleActions, thisAnt, visibleLocations);
+            action = explore(thisAnt);
             if (action != null) {
                 //System.out.println("Warrior: scout");
             }

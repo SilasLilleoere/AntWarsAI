@@ -41,37 +41,38 @@ public class CarrierAI extends GeneralAI implements IAntAI {
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
 
+        //--------------------------------------------
+        pA = possibleActions;
+        visLoc = visibleLocations;
         hive.updateMap(visibleLocations);
-        worldMap = hive.getMap();
         EAction action = null;
+        //---------------------------------------------
 
+        
         //       #1 Survival
-        action = survival(thisAnt, possibleActions);
+        action = survival(thisAnt);
 
         //       #2 Gather
         if (action == null) {
-            action = gatherFood(thisAnt, possibleActions);
-        }
-        
-         if (action == null) {
-            action = attackEnemy(thisAnt, possibleActions, visibleLocations);
+            action = gatherFood(thisAnt);
         }
 
-        //       #3 Dig
+        //      #3 Attack
+        if (action == null) {
+            action = attackEnemy(thisAnt);
+        }
+
+        //       #4 Dig
 //        if (action == null) {
 //            action = dig(possibleActions, visibleLocations);
 //        }
-//        //       #4 DropSoil
+//        //       #5 DropSoil
 //        if (action == null) {
 //            action = dropSoil(possibleActions, thisAnt, visibleLocations);
 //        }
         //       #5 Scout
         if (action == null) {
-            action = explore(possibleActions, thisAnt, visibleLocations);
-        }
-
-        if (goingHome) {
-            action = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
+            action = explore(thisAnt);
         }
 
         if (action == null) {
