@@ -11,7 +11,6 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import a1.astar_martin.AStar_Martin;
 import java.util.List;
 
 /**
@@ -48,7 +47,6 @@ public class CarrierAI extends GeneralAI implements IAntAI {
         EAction action = null;
         //---------------------------------------------
 
-        
         //       #1 Survival
         action = survival(thisAnt);
 

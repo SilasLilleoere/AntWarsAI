@@ -81,23 +81,32 @@ public class QueenAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-        EAntType type;
-//        type = policies.getEggType();
-//        switch (type.getTypeName()){
-//            case "CARRIER": {
-//                egg.set(type, Carrier);
-//            }case "SCOUT": {
-//                egg.set(type, Scout);
-//            }case "WARRIOR": {
-//                egg.set(type, Warrior);
-//            }
-//        }
+        EAntType type = hive.getEggType(types);
+        IAntAI AI = null;
 
-//--------------------------------------------------
-//--------------- TEMP WARRRIOOOORRZ---------------------
-//--------------------------------------------------
-        type = types.get(0);
-        egg.set(type, new CarrierAI(hive));
+        System.out.println("eggType: " + type.getTypeName());
+//
+        switch (type.getTypeName()) {
+            case "Carrier": {
+                AI = new CarrierAI(hive);
+                break;
+            }
+            case "Scout": {
+                AI = new ScoutAI(hive);
+                break;
+            }
+            case "Warrier": {
+                System.out.println("warriorAI being made");
+                AI = new WarriorAI(hive);
+                break;
+            }
+        }
+        //0 = Carrier
+        //1 = Scout
+        //2 = warrior
+        //  type = types.get(0);
+        egg.set(type, AI);
+        //egg.set(type, new CarrierAI(hive));
     }
 
     @Override

@@ -5,6 +5,8 @@ import aiantwars.impl.Location;
 import a1.astar_martin.AStar_Martin;
 import a1.datacollection.DataCollector;
 import a1.datacollection.DataObject;
+import a1.datacollection.Policies;
+import aiantwars.EAntType;
 import aiantwars.IAntInfo;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class TheHive {
     private ILocationInfo[][] hiveMap = null;
     private AStar_Martin AStarInstance = null;
     private DataCollector d = new DataCollector();
+    private Policies p = new Policies(this);
 
     public AStar_Martin getAStarInstance() {
 
@@ -34,6 +37,10 @@ public class TheHive {
         return AStarInstance;
     }
 
+    public void updateHive() {
+
+    }
+
     public TheHive(int boardSizeX, int boardSizeY) {
         this.boardSizeX = boardSizeX;
         this.boardSizeY = boardSizeY;
@@ -42,12 +49,9 @@ public class TheHive {
     public void makeMap(int worldSizeX, int worldSizeY) {
 
         if (hiveMap == null) {
-            System.out.println("The Map was made!");
 
             boardSizeX = worldSizeX;
             boardSizeY = worldSizeY;
-//            System.out.println("X: " + boardSizeX);
-//            System.out.println("Y: " + boardSizeY);
 
             hiveMap = new ILocationInfo[boardSizeX][boardSizeY];
 
@@ -65,11 +69,13 @@ public class TheHive {
         return hiveMap;
     }
 
-    public void updateMap(List<ILocationInfo> visibleLocations) {
+    public void updateMap(List<ILocationInfo> visLoc) {
 
-        for (ILocationInfo loc : visibleLocations) {
+        for (ILocationInfo loc : visLoc) {
             hiveMap[loc.getX()][loc.getY()] = loc;
         }
+        //updates information in policies
+        p.updateData();
     }
 
     public void clearMap() {
@@ -102,6 +108,11 @@ public class TheHive {
 
     public void setCurrPos(ILocationInfo currPos) {
         this.currPos = currPos;
+    }
+    //-----------------------POLICIES METHODS---------------------------------------------
+
+    public EAntType getEggType(List<EAntType> types) {
+        return p.getEggType(types);
     }
 
     //-----------------------DATACOLLECTOR METHODS-----------------------------------------

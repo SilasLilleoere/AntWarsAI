@@ -11,7 +11,6 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import a1.astar_martin.AStar_Martin;
 import java.util.List;
 
 /**
@@ -20,9 +19,6 @@ import java.util.List;
  */
 public class ScoutAI extends GeneralAI implements IAntAI {
 
-    //Pathfinding
-    private AStar_Martin AStarPathFinder = null;
-    private TheHive hive = null;
 
     public ScoutAI(TheHive hiveFromQueen) {
         this.hive = hiveFromQueen;
@@ -45,7 +41,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
         //--------------------------------------------
         pA = possibleActions;
         visLoc = visibleLocations;
-        hive.updateMap(visibleLocations);
+        hive.updateMap(visLoc);
         EAction action = null;
         //---------------------------------------------
 
@@ -73,7 +69,7 @@ public class ScoutAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        getAttacker(thisAnt, dir, attacker);
+        decideAttackRespons(dir, thisAnt, attacker);
     }
 
     @Override

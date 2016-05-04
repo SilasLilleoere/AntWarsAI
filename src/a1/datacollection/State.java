@@ -38,7 +38,7 @@ public class State {
         //1 scouts
         //2 warriors (these warriors act as 'bodyguards')
         //2 carriers
-        startState = new State(1, 2, 2, false, false, false, false);
+        startState = new State(1, 2, 1, false, false, false, false);
 
         //have atleast:
         //2 scouts

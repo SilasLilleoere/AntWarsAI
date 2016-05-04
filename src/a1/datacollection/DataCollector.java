@@ -94,16 +94,18 @@ public class DataCollector {
     public void updateAnts(IAntInfo thisAnt, boolean isAlive) {
 
         String TheAntType = thisAnt.getAntType().getTypeName();
+        System.out.println("TheAntType for Count: " + TheAntType);
         switch (TheAntType) {
-            case "WARRIOR": {
+            case "Warrier": { //warrior return of getAntType() is spelled wrong: warrier
+                System.out.println("warrior bliver talt");
                 int cal = (isAlive) ? 1 : -1;
                 warriorCount += cal;
             }
-            case "CARRIER": {
+            case "Carrier": {
                 int cal = (isAlive) ? 1 : -1;
                 carrierCount += cal;
             }
-            case "SCOUT": {
+            case "Scout": {
                 int cal = (isAlive) ? 1 : -1;
                 scoutCount += cal;
             }
