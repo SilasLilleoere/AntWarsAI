@@ -73,12 +73,12 @@ public class DataCollector {
             attackRate = 20;
         }
 
-        DataObject data = getDataObject();
-        System.out.println("-----------------------------------------------");
-        System.out.println("Current AttackedRate: " + data.getAttackRate());
-        System.out.println("Current Turn: " + data.getTurn());
-        System.out.println("Current totalAttacks: " + totalAttacks);
-        System.out.println("-----------------------------------------------");
+//        DataObject data = getDataObject();
+//        System.out.println("-----------------------------------------------");
+//        System.out.println("Current AttackedRate: " + data.getAttackRate());
+//        System.out.println("Current Turn: " + data.getTurn());
+//        System.out.println("Current totalAttacks: " + totalAttacks);
+//        System.out.println("-----------------------------------------------");
 
     }
 

@@ -99,9 +99,9 @@ public class Policies {
     public void fillAttackStack() {
 
         // only fill attackStack if empty and have enough warriors.
-        if (attackStack.empty() && data.getWarriorCount() > 4) {
+        if (attackStack.empty() && data.getWarriorCount() > 1) {
 
-            int ants = (data.getWarriorCount() >= 8) ? 4 : 2;
+            int ants = (data.getWarriorCount() >= 8) ? 4 : 1;
             for (int i = 0; i <= ants; i++) {
                 attackStack.add(true);
             }

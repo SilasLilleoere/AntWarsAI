@@ -75,12 +75,13 @@ public class LowerLevelAI {
         IAntInfo enemyAnt = getAnt();
 
         if (enemyAnt != null) {
-            if (enemyAnt.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
-                hive.setEnemyQueenSpotted(enemyAnt.getLocation());
-            }
+
             target = enemyAnt.getTeamInfo().getTeamID();
             if (target != self) {
                 enemy = true;
+            }
+            if (enemy && enemyAnt.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
+                hive.setEnemyQueenSpotted(enemyAnt.getLocation());
             }
         }
         return enemy;

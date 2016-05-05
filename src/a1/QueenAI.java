@@ -80,8 +80,7 @@ public class QueenAI extends MidLevelAI implements IAntAI {
         String antType = type.getTypeName();
         IAntAI AI = null;
 
-        System.out.println("eggType: " + type.getTypeName());
-//
+        //set surtable AI for Type
         switch (antType) {
             case "Carrier": {
                 AI = new CarrierAI(hive);
@@ -92,7 +91,6 @@ public class QueenAI extends MidLevelAI implements IAntAI {
                 break;
             }
             case "Warrier": {
-                System.out.println("warriorAI being made");
                 AI = new WarriorAI(hive);
                 break;
             }
