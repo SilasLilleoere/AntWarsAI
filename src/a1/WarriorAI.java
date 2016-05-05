@@ -29,13 +29,12 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        hive.updateAnts(thisAnt, true);
         AStarPathFinder = hive.getAStarInstance();
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-
+        hive.setTotalTurns(turn);
     }
 
     @Override
@@ -54,9 +53,6 @@ public class WarriorAI extends GeneralAI implements IAntAI {
         //       #2 Attack
         if (action == null) {
             action = attackEnemy(thisAnt);
-            if (action != null) {
-                System.out.println("Warrior: attack");
-            }
         }
 
         //       #3 Gather
@@ -84,17 +80,18 @@ public class WarriorAI extends GeneralAI implements IAntAI {
 
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-        throw new UnsupportedOperationException("I CAN'T LAY EGGS LOL."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
         decideAttackRespons(dir, thisAnt, attacker);
+        hive.updateAttacks();
     }
 
     @Override
     public void onDeath(IAntInfo thisAnt) {
-        hive.updateAnts(thisAnt, false);
+        String type = thisAnt.getAntType().getTypeName();
+        hive.updateAnts(type, false);
     }
 
     @Override

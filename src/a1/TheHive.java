@@ -115,13 +115,27 @@ public class TheHive {
         return p.getEggType(types);
     }
 
+    public ILocationInfo getMoveLocation() {
+        return null;
+    }
+
     //-----------------------DATACOLLECTOR METHODS-----------------------------------------
-    public void updateAnts(IAntInfo thisAnt, boolean isAlive) {
-        d.updateAnts(thisAnt, isAlive);
+    public void updateAnts(String antType, boolean isAlive) {
+        d.updateAnts(antType, isAlive);
     }
 
     public void updateFood(Boolean hasEaten) {
         d.updateFood(hasEaten);
+    }
+
+    public void updateAttacks() {
+        d.updateAttacks();
+        d.updateAttackRate(true);
+    }
+
+    public void setTotalTurns(int turns) {
+        d.setTotalTurns(turns);
+        d.updateAttackRate(false); 
     }
 
     public DataObject getData() {

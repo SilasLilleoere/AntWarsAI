@@ -46,38 +46,29 @@ public class Policies {
 
     public void decideState() {
 
-        if (data.getTurns() <= 60) {
+        if (data.getTurn() <= 50) {
             currentState = startState;
-//        } else {
-//
-//            //if ants get attacked often, go to defendstate.
-//            if (data.getAttackRate() > 1) {
-//                currentState = defendState;
-//            }
-//
-//            if (data.getTurns() > 1000 && data.getFoodAntRatio() < 10 && data.getMapExplored() > 50) {
-//                currentState = saveFoodState;
-//            }
-//
-//            if (data.getTurns() < 1000) {
-//
-//            }
+            return;
         }
+
+        if (data.getAttackRate() < 15) {
+            currentState = exploreState;
+        }
+
+        if (data.getAttackRate() >= 15) {
+            currentState = defendState;
+        }
+
+        if (data.getFoodAntRatio() < 2 && data.getAttackRate() < 1 && data.getTurn() > 150) {
+            currentState = saveFoodState;
+        }
+
     }
 
     public void handleState() {
     }
 
     public EAntType getEggType(List<EAntType> types) {
-
-        System.out.println("State scouts: " + currentState.getScoutAmount());
-        System.out.println("Current scouts " + data.getScoutCount());
-
-        System.out.println("State carriers: " + currentState.getCarrierAmount());
-        System.out.println("Current carriers: " + data.getCarrierCount());
-
-        System.out.println("State warriors: " + currentState.getWarriorAmount());
-        System.out.println("Current warriors: " + data.getWarriorCount());
 
         if (data.getCarrierCount() < currentState.getCarrierAmount()) {
             return types.get(0); // Carrier
@@ -86,7 +77,11 @@ public class Policies {
         } else if (data.getScoutCount() < currentState.getScoutAmount()) {
             return types.get(1); // Scout
         } else {
-            return types.get(2); // return warrior, if other minimum kvotes are meet.
+            if (currentState != saveFoodState) {
+                return types.get(2); // return warrior, if other minimum kvotes are meet.
+            } else {
+                return null;
+            }
         }
     }
 

@@ -51,7 +51,7 @@ public class State {
         //have atleast:
         //10 warriors
         //activity:
-        //up to 5 warriors go to queens location.
+        //up to 4 warriors go to queens location.
         //queenGoHome = true.
         defendState = new State(10, true, true);
 

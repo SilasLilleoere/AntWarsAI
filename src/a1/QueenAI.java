@@ -25,13 +25,12 @@ public class QueenAI extends GeneralAI implements IAntAI {
         hive = new TheHive(worldSizeX, worldSizeY);
         hive.makeMap(worldSizeX, worldSizeY); //only queen should make map
         hive.setStartPos(thisAnt.getLocation());
-        hive.updateAnts(thisAnt, true);
+        hive.updateAnts(thisAnt.getAntType().getTypeName(), true);
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
-        DataObject d = hive.getData();
-        // System.out.println("TotalAnts: " + d.getTotalAnts() + " TotalFood:" + d.getTotalFood());
+        hive.setTotalTurns(turn);
     }
 
     @Override
@@ -82,11 +81,12 @@ public class QueenAI extends GeneralAI implements IAntAI {
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
         EAntType type = hive.getEggType(types);
+        String antType = type.getTypeName();
         IAntAI AI = null;
 
         System.out.println("eggType: " + type.getTypeName());
 //
-        switch (type.getTypeName()) {
+        switch (antType) {
             case "Carrier": {
                 AI = new CarrierAI(hive);
                 break;
@@ -105,14 +105,18 @@ public class QueenAI extends GeneralAI implements IAntAI {
         //1 = Scout
         //2 = warrior
         //  type = types.get(0);
-        egg.set(type, AI);
+        if (type != null) {
+            egg.set(type, AI);
+            hive.updateAnts(antType, true);
+        }
         //egg.set(type, new CarrierAI(hive));
     }
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        getAttacker(thisAnt, dir, attacker);
+        decideAttackRespons(dir, thisAnt, attacker);
         goingHome = true;
+        hive.updateAttacks();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class DataObject {
     private int carrierCount;
     private int scoutCount;
     private int totalAnts;
-    private int attackRate;
+    private float attackRate;
     private int foodAntRatio;
     private ILocationInfo QueenLastSpottedLoc;
     private int QueenSpottedTurn;
@@ -28,7 +28,7 @@ public class DataObject {
     public DataObject() {
     }
 
-    public DataObject(int turns, int totalFood, int warriorCount, int carrierCount, int scoutCount, int totalAnts, int attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
+    public DataObject(int turns, int totalFood, int warriorCount, int carrierCount, int scoutCount, int totalAnts, float attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
 
         this.totalTurns = turns;
         this.totalFood = totalFood;
@@ -43,15 +43,11 @@ public class DataObject {
         this.mapExplored = mapExploredProcentage;
     }
 
-    public int getTotalTurns() {
-        return totalTurns;
-    }
-
     public int getTotalFood() {
         return totalFood;
     }
 
-    public int getTurns() {
+    public int getTurn() {
         return totalTurns;
     }
 
@@ -71,7 +67,7 @@ public class DataObject {
         return totalAnts;
     }
 
-    public int getAttackRate() {
+    public float getAttackRate() {
         return attackRate;
     }
 

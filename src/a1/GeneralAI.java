@@ -304,17 +304,27 @@ public class GeneralAI {
         } //15,8
         else if (antY == height && thisAnt.getDirection() == 3) {
             action = EAction.TurnLeft;
-        } else if (direction.equalsIgnoreCase("Right")) {
+        }
+        else if (direction.equalsIgnoreCase("Right")) {
             action = EAction.TurnRight;
-        } else if (direction.equalsIgnoreCase("Left")) {
+        }
+        else if (direction.equalsIgnoreCase("Left")) {
             action = EAction.TurnRight;
-        } else if (rnd.nextBoolean()) {
+        }
+        else if (rnd.nextBoolean()) {
             action = EAction.TurnRight;
             direction = "Right";
-        } else {
+        }
+        else {
             action = EAction.TurnLeft;
             direction = "Left";
         }
+        
+        //quick fix
+        if (antY == 0 && thisAnt.getDirection() == 0) {
+            action = EAction.TurnLeft;
+        }
+        
         return action;
     }
 
