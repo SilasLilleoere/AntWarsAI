@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author Silas og Martin
  */
-public class MidLevelAI extends LowerLevelAI {
+public class MidLevelAI extends LowLevelAI {
 
     boolean findEnemyQueen = false;
     boolean retaliation = false;
@@ -81,23 +81,6 @@ public class MidLevelAI extends LowerLevelAI {
         return action;
     }
 
-    public EAction pickUpFood(IAntInfo thisAnt) {
-        EAction action = null;
-
-        if (pA.contains(EAction.PickUpFood)) {
-            action = EAction.PickUpFood;
-        }
- //       else if (isFoodAhead(visibleLocations)) {
-//            action = EAction.MoveForward;
-//        }
-
-        //updates totalFood in DataCollector if ant pick up food (adds to totalFood). 
-        if (action == EAction.PickUpFood) {
-            hive.updateFood(false);
-        }
-        return action;
-    }
-
     //Drop food for Queen
     public EAction returnFood(IAntInfo thisAnt, ILocationInfo moveLoc, ILocationInfo[][] worldMap) {
         EAction action = null;
@@ -155,6 +138,12 @@ public class MidLevelAI extends LowerLevelAI {
     //---------------------------------------------SILAS---------------------------------------------------------------------
     public EAction explore(IAntInfo thisAnt) {
         EAction action = null;
+
+        //This is so scout, carrier and Queen will setEnemyQueenSpotted if they run into enemyQueen.
+        //Warrior does this in attackEnemy.
+        if (!thisAnt.getAntType().getTypeName().equalsIgnoreCase("Warrier")) {
+            isEnemy(thisAnt);
+        }
 
         if (isBlind(thisAnt) && pA.contains(EAction.TurnLeft) || getAnt() != null && pA.contains(EAction.TurnLeft)) {
             action = turnRnd(thisAnt, hive);
@@ -216,8 +205,6 @@ public class MidLevelAI extends LowerLevelAI {
     //--------------------------------------------------------------------------
     //SPECIFIC BEHAVIOR VS ENEMY - START
     //--------------------------------------------------------------------------
-   
-
     //--------------------------------------------------------------------------
     //SPECIFIC BEHAVIOR VS ENEMY - END
     //--------------------------------------------------------------------------

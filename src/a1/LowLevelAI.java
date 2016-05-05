@@ -17,7 +17,7 @@ import java.util.Random;
  *
  * @author Silas og Martin
  */
-public class LowerLevelAI {
+public class LowLevelAI {
 
     String direction = "";
     List<ILocationInfo> visLoc; // visibleLocations
@@ -271,6 +271,23 @@ public class LowerLevelAI {
             enemyHP = 1;
         }
         return enemyHP;
+    }
+
+    public EAction pickUpFood(IAntInfo thisAnt) {
+        EAction action = null;
+
+        if (pA.contains(EAction.PickUpFood)) {
+            action = EAction.PickUpFood;
+        }
+ //       else if (isFoodAhead(visibleLocations)) {
+//            action = EAction.MoveForward;
+//        }
+
+        //updates totalFood in DataCollector if ant pick up food (adds to totalFood). 
+        if (action == EAction.PickUpFood) {
+            hive.updateFood(false);
+        }
+        return action;
     }
 
 }

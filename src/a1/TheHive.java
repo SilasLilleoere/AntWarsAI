@@ -134,21 +134,21 @@ public class TheHive {
 
     public void setTotalTurns(int turns) {
         d.setTotalTurns(turns);
-        d.updateAttackRate(false); 
+        d.updateAttackRate(false);
     }
 
     public DataObject getData() {
         return d.getDataObject();
     }
-    
-    public void setEnemyQueenSpotted(ILocationInfo loc){
+
+    public void setEnemyQueenSpotted(ILocationInfo loc) {
         System.out.println("enemyQueen spotted!!");
-    d.setEnemyQueenSpotted(loc);
-    p.fillAttackStack();
+        d.setEnemyQueenSpotted(loc);
+        p.fillAttackStack();
     }
-    
-    public ILocationInfo attackOrder(){
+
+    public ILocationInfo attackOrder() {
         return p.attackOrder();
-    
+
     }
 }
