@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Silas
  */
-public class CarrierAI extends GeneralAI implements IAntAI {
+public class CarrierAI extends MidLevelAI implements IAntAI {
 
     //Pathfinding
     private ILocationInfo queenLoc = null;

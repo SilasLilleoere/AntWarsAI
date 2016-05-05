@@ -21,14 +21,14 @@ public class DataObject {
     private int totalAnts;
     private float attackRate;
     private int foodAntRatio;
-    private ILocationInfo QueenLastSpottedLoc;
-    private int QueenSpottedTurn;
+    private ILocationInfo enemyQueenSpotted;
+    private int enemyQueenSpottedTurn;
     private int mapExplored;
 
     public DataObject() {
     }
 
-    public DataObject(int turns, int totalFood, int warriorCount, int carrierCount, int scoutCount, int totalAnts, float attackRate, int foodAntRatio, ILocationInfo QueenLastSpotted, int QueenSpottedTurn, int mapExploredProcentage) {
+    public DataObject(int turns, int totalFood, int warriorCount, int carrierCount, int scoutCount, int totalAnts, float attackRate, int foodAntRatio, ILocationInfo enemyQueenSpotted, int enemyQueenSpottedTurn, int mapExploredProcentage) {
 
         this.totalTurns = turns;
         this.totalFood = totalFood;
@@ -38,8 +38,8 @@ public class DataObject {
         this.totalAnts = totalAnts;
         this.attackRate = attackRate;
         this.foodAntRatio = foodAntRatio;
-        this.QueenLastSpottedLoc = QueenLastSpotted;
-        this.QueenSpottedTurn = QueenSpottedTurn;
+        this.enemyQueenSpotted = enemyQueenSpotted;
+        this.enemyQueenSpottedTurn = enemyQueenSpottedTurn;
         this.mapExplored = mapExploredProcentage;
     }
 
@@ -75,12 +75,12 @@ public class DataObject {
         return foodAntRatio;
     }
 
-    public ILocationInfo getQueenLastSpottedLoc() {
-        return QueenLastSpottedLoc;
+    public ILocationInfo getEnemyQueenSpotted() {
+        return enemyQueenSpotted;
     }
 
-    public int getQueenSpottedTurn() {
-        return QueenSpottedTurn;
+    public int getEnemyQueenSpottedTurn() {
+        return enemyQueenSpottedTurn;
     }
 
     public int getMapExplored() {

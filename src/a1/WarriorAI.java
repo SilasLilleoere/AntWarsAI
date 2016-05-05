@@ -18,7 +18,7 @@ import java.util.Stack;
  *
  * @author Silas
  */
-public class WarriorAI extends GeneralAI implements IAntAI {
+public class WarriorAI extends MidLevelAI implements IAntAI {
 
     Stack<EAction> actionQueue = new Stack();
 
@@ -47,6 +47,8 @@ public class WarriorAI extends GeneralAI implements IAntAI {
         EAction action = null;
         //---------------------------------------------
 
+        enemyQueenLoc = hive.attackOrder();
+
         //       #1 Survival
         action = survival(thisAnt);
 
@@ -55,14 +57,15 @@ public class WarriorAI extends GeneralAI implements IAntAI {
             action = attackEnemy(thisAnt);
         }
 
-        //       #3 Gather
+        //       #3 Search n Destroy
+        if(action == null && findEnemyQueen){
+        action = moveTo(thisAnt, goal, hive.getMap());        
+        }
+      
+        //       #4 Gather
         if (thisAnt.getFoodLoad() < 4 && action == null) {
             action = pickUpFood(thisAnt);
         }
-        //       #4 Search n Destroy 
-        //       Might be relocated to GeneralAI
-        //  hive.searchAndDestroy();
-        //  action = nextStepInSearchAndDestroy();
 
         //       #5 Scout
         if (action == null) {

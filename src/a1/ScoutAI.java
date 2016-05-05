@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Silas
  */
-public class ScoutAI extends GeneralAI implements IAntAI {
+public class ScoutAI extends MidLevelAI implements IAntAI {
 
     public ScoutAI(TheHive hiveFromQueen) {
         this.hive = hiveFromQueen;

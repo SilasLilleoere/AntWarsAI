@@ -24,8 +24,8 @@ public class DataCollector {
 
     //---------------enemyQueen----------------
     //location of where enemy queen was last spotted and on what turn/time.
-    private ILocationInfo QueenLastSpottedLoc;
-    private int QueenSpottedTurn;
+    private ILocationInfo enemyQueenSpotted;
+    private int enemyQueenSpottedTurn;
     private ILocationInfo enemyStartPos;
 
     //---------------OurQueen------------------
@@ -104,7 +104,19 @@ public class DataCollector {
 
     public DataObject getDataObject() {
         calFoodRatio();
-        DataObject o = new DataObject(totalTurns, totalFood, warriorCount, carrierCount, scoutCount, totalAnts, attackRate, foodAntRatio, QueenLastSpottedLoc, QueenSpottedTurn, mapExplored);
+        DataObject o = new DataObject(
+                totalTurns,
+                totalFood,
+                warriorCount,
+                carrierCount,
+                scoutCount,
+                totalAnts,
+                attackRate,
+                foodAntRatio,
+                enemyQueenSpotted,
+                enemyQueenSpottedTurn,
+                mapExplored
+        );
         return o;
     }
 
@@ -143,5 +155,10 @@ public class DataCollector {
         } else if (!isAlive) {
             totalAnts--;
         }
+    }
+
+    public void setEnemyQueenSpotted(ILocationInfo loc) {
+        enemyQueenSpotted = loc;
+        enemyQueenSpottedTurn = totalTurns;
     }
 }

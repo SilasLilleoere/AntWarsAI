@@ -7,7 +7,6 @@ import a1.datacollection.DataCollector;
 import a1.datacollection.DataObject;
 import a1.datacollection.Policies;
 import aiantwars.EAntType;
-import aiantwars.IAntInfo;
 import java.util.List;
 
 /**
@@ -140,5 +139,14 @@ public class TheHive {
 
     public DataObject getData() {
         return d.getDataObject();
+    }
+    
+    public void setEnemyQueenSpotted(ILocationInfo loc){
+    d.setEnemyQueenSpotted(loc);
+    }
+    
+    public ILocationInfo attackOrder(){
+        return p.attackOrder();
+    
     }
 }

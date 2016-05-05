@@ -8,7 +8,9 @@ package a1.datacollection;
 //1.Start State
 import a1.TheHive;
 import aiantwars.EAntType;
+import aiantwars.ILocationInfo;
 import java.util.List;
+import java.util.Stack;
 
 //2.Explore State
 //3.Defend State
@@ -16,6 +18,7 @@ import java.util.List;
 //5.SaveFood State
 public class Policies {
 
+    private Stack<Boolean> attackStack = new Stack();
     private State currentState;
     private State startState;
     private State exploreState;
@@ -93,4 +96,32 @@ public class Policies {
 
     }
 
+    public void fillAttackStack() {
+
+        // only fill attackStack if empty and have enough warriors.
+        if (attackStack.empty() && data.getWarriorCount() > 4) {
+
+            int ants = (data.getWarriorCount() >= 8) ? 4 : 2;
+            for (int i = 0; i <= ants; i++) {
+                attackStack.add(true);
+            }
+        }
+    }
+
+    public ILocationInfo attackOrder() {
+
+        //if enemyQueen was spotted in current og last turn, 
+        //then give warriorAnt order to go to enemyQueen's last spotted location.
+        if (data.getEnemyQueenSpottedTurn() >= data.getTurn() - 1) {
+            if (!attackStack.empty()) {
+                attackStack.pop();
+                return data.getEnemyQueenSpotted();
+            }
+        }
+        else{
+        attackStack.clear();
+        }
+        
+        return null;
+    }
 }

@@ -13,27 +13,29 @@ import java.util.Random;
  *
  * @author Silas
  */
-public class GeneralAI {
+public class MidLevelAI extends LowerLevelAI {
 
     List<ILocationInfo> visLoc; // visibleLocations
     List<EAction> pA; //possibleActions
 
+    ILocationInfo enemyQueenLoc = null; //used by warrior only
+    ILocationInfo goal = null;
+    ILocationInfo digLoc = null;
     EAction turn = null;
     ArrayList turnList = null;
     ArrayList dirList = null;
-    Random ran = new Random();
     String direction = "";
-    boolean retaliation = false;
     List<EAction> turnTo = new ArrayList();
-    ILocationInfo goal = null;
+    Random ran = new Random();
+    boolean findEnemyQueen = false;
+    boolean retaliation = false;
     boolean goingHome = false;
-    ILocationInfo digLoc = null;
 
     //The Hive and Astar
     AStar_Martin AStarPathFinder = null;
     TheHive hive = null;
 
-    public GeneralAI() {
+    public MidLevelAI() {
     }
 
     public void resetHive() {
@@ -52,9 +54,10 @@ public class GeneralAI {
 
         //Ant goes to start position because its fleeing or needs food from storage. 
         if (goingHome) {
-            survAction = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
             if (pA.contains(EAction.Attack) && survAction == null) {
                 survAction = attackEnemy(thisAnt);
+            } else {
+                survAction = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
             }
         }
 
@@ -178,9 +181,9 @@ public class GeneralAI {
             }
         } else {
             goingHome = false;
+            findEnemyQueen = false;
         }
         return action;
-
     }
 
     public EAction nextMove(ILocationInfo loc, IAntInfo thisAnt) {
@@ -279,7 +282,6 @@ public class GeneralAI {
         if (!visLoc.isEmpty()) {
             ant = visLoc.get(0).getAnt();
         }
-
         return ant;
     }
 
@@ -304,27 +306,23 @@ public class GeneralAI {
         } //15,8
         else if (antY == height && thisAnt.getDirection() == 3) {
             action = EAction.TurnLeft;
-        }
-        else if (direction.equalsIgnoreCase("Right")) {
+        } else if (direction.equalsIgnoreCase("Right")) {
             action = EAction.TurnRight;
-        }
-        else if (direction.equalsIgnoreCase("Left")) {
+        } else if (direction.equalsIgnoreCase("Left")) {
             action = EAction.TurnRight;
-        }
-        else if (rnd.nextBoolean()) {
+        } else if (rnd.nextBoolean()) {
             action = EAction.TurnRight;
             direction = "Right";
-        }
-        else {
+        } else {
             action = EAction.TurnLeft;
             direction = "Left";
         }
-        
+
         //quick fix
         if (antY == 0 && thisAnt.getDirection() == 0) {
             action = EAction.TurnLeft;
         }
-        
+
         return action;
     }
 
@@ -336,6 +334,9 @@ public class GeneralAI {
         IAntInfo enemyAnt = getAnt();
 
         if (enemyAnt != null) {
+            if (enemyAnt.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
+                hive.setEnemyQueenSpotted(enemyAnt.getLocation());
+            }
             target = enemyAnt.getTeamInfo().getTeamID();
             if (target != self) {
                 enemy = true;
@@ -361,6 +362,13 @@ public class GeneralAI {
 
     public EAction attackEnemy(IAntInfo thisAnt) {
         EAction action = null;
+
+        //Warrior goal will be set to enemyQueen's last know location. 
+        //However, will still attack other ants along the way.
+        if (enemyQueenLoc != null) {
+            findEnemyQueen = true;
+            goal = enemyQueenLoc;
+        }
 
         if (isEnemy(thisAnt)) {
 

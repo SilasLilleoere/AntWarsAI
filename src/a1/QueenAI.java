@@ -11,14 +11,13 @@ import aiantwars.IAntAI;
 import aiantwars.IAntInfo;
 import aiantwars.IEgg;
 import aiantwars.ILocationInfo;
-import a1.datacollection.DataObject;
 import java.util.List;
 
 /**
  *
  * @author Silas
  */
-public class QueenAI extends GeneralAI implements IAntAI {
+public class QueenAI extends MidLevelAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
@@ -57,9 +56,6 @@ public class QueenAI extends GeneralAI implements IAntAI {
         //#3 Gather
         if (action == null && !goingHome) {
             action = pickUpFood(thisAnt);
-            if (action != null) {
-                //  System.out.println("Queen: Gather");
-            }
         }
 
         //#4 Scout
