@@ -59,6 +59,7 @@ public class WarriorAI extends MidLevelAI implements IAntAI {
 
         //       #3 Search n Destroy
         if(action == null && findEnemyQueen){
+            System.out.println("Warrior is now moving towards enemyQueen's last location");
         action = moveTo(thisAnt, goal, hive.getMap());        
         }
       

@@ -142,7 +142,9 @@ public class TheHive {
     }
     
     public void setEnemyQueenSpotted(ILocationInfo loc){
+        System.out.println("enemyQueen spotted!!");
     d.setEnemyQueenSpotted(loc);
+    p.fillAttackStack();
     }
     
     public ILocationInfo attackOrder(){
