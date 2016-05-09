@@ -16,7 +16,7 @@ import java.util.Stack;
 //3.Defend State
 //4.SearchAndDestroy State
 //5.SaveFood State
-public class Policies {
+public class HighLevelAI {
 
     private Stack<Boolean> attackStack = new Stack();
     private State currentState;
@@ -29,7 +29,7 @@ public class Policies {
     private TheHive hive;
     private DataObject data = new DataObject();
 
-    public Policies(TheHive hive) {
+    public HighLevelAI(TheHive hive) {
 
         this.hive = hive;
         states = new State();
@@ -101,7 +101,7 @@ public class Policies {
         // only fill attackStack if empty and have enough warriors.
         if (attackStack.empty() && data.getWarriorCount() > 1) {
 
-            int ants = (data.getWarriorCount() >= 8) ? 4 : 1;
+            int ants = (data.getWarriorCount() >= 6) ? 4 : 2;
             for (int i = 0; i <= ants; i++) {
                 attackStack.add(true);
             }

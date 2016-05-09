@@ -24,6 +24,7 @@ public class QueenAI extends MidLevelAI implements IAntAI {
         hive = new TheHive(worldSizeX, worldSizeY);
         hive.makeMap(worldSizeX, worldSizeY); //only queen should make map
         hive.setStartPos(thisAnt.getLocation());
+        hive.setFriendlyAntTeamID(thisAnt.getTeamInfo().getTeamID());
         hive.updateAnts(thisAnt.getAntType().getTypeName(), true);
     }
 
@@ -41,9 +42,6 @@ public class QueenAI extends MidLevelAI implements IAntAI {
         hive.updateMap(visibleLocations);
         EAction action = null;
         //---------------------------------------------
-
-        //Update current Queen location, so ants can A* to her.
-        hive.setCurrPos(thisAnt.getLocation());
 
         //#1 Survival
         action = survival(thisAnt);
@@ -66,11 +64,12 @@ public class QueenAI extends MidLevelAI implements IAntAI {
             }
         }
 
+        //#5 Pass/CheckIfStuck
         if (action == null) {
             action = EAction.Pass;
+             checkIfStuck(thisAnt);
         }
-
-        // System.out.println("Action: " + action.toString());
+       
         return action;
     }
 

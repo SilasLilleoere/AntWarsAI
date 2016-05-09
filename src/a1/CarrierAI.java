@@ -29,13 +29,13 @@ public class CarrierAI extends MidLevelAI implements IAntAI {
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
 
-        AStarPathFinder = hive.getAStarInstance();
+        AStar = hive.getAStarInstance();
     }
 
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {
         hive.setTotalTurns(turn);
-        queenLoc = hive.getCurrPos();
+
     }
 
     @Override
@@ -74,9 +74,12 @@ public class CarrierAI extends MidLevelAI implements IAntAI {
             action = explore(thisAnt);
         }
 
+        //5 Pass
         if (action == null) {
             action = EAction.Pass;
+            checkIfStuck(thisAnt);
         }
+
         return action;
     }
 

@@ -14,6 +14,8 @@ public class MidLevelAI extends LowLevelAI {
     boolean findEnemyQueen = false;
     boolean retaliation = false;
     boolean goingHome = false;
+    int stuckCounter = 0;
+    ILocationInfo lastPos = null;
 
     public MidLevelAI() {
     }
@@ -38,6 +40,7 @@ public class MidLevelAI extends LowLevelAI {
                 survAction = attackEnemy(thisAnt);
             } else {
                 survAction = moveTo(thisAnt, hive.getStartPos(), hive.getMap());
+                checkIfStuck(thisAnt);
             }
         }
 
@@ -135,7 +138,6 @@ public class MidLevelAI extends LowLevelAI {
         return action;
     }
 
-    //---------------------------------------------SILAS---------------------------------------------------------------------
     public EAction explore(IAntInfo thisAnt) {
         EAction action = null;
 
@@ -146,7 +148,7 @@ public class MidLevelAI extends LowLevelAI {
         }
 
         if (isBlind(thisAnt) && pA.contains(EAction.TurnLeft) || getAnt() != null && pA.contains(EAction.TurnLeft)) {
-            action = turnRnd(thisAnt, hive);
+            action = turnRnd(thisAnt);
         } else if (!isBlind(thisAnt) && pA.contains(EAction.MoveForward)) {
             action = EAction.MoveForward;
             direction = "";
@@ -161,7 +163,6 @@ public class MidLevelAI extends LowLevelAI {
         //However, will still attack other ants along the way.
         if (enemyQueenLoc != null) {
             findEnemyQueen = true;
-            System.out.println("FindEnemy is set to true!!!!");
             goal = enemyQueenLoc;
         }
 
@@ -200,34 +201,25 @@ public class MidLevelAI extends LowLevelAI {
         return action;
     }
 
-    //--------------------------------------------------------------------------
-    //ON ATTACK METHODS - START
-    //--------------------------------------------------------------------------
-    //SPECIFIC BEHAVIOR VS ENEMY - START
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //SPECIFIC BEHAVIOR VS ENEMY - END
-    //--------------------------------------------------------------------------
     // Silas method
-    public void getAttacker(IAntInfo thisAnt, int dir, IAntInfo attacker) {
-        int enemyHP = setEnemyConditions(thisAnt, attacker);
-
-        if (attacker.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
-            turnToDir(dir, thisAnt);
-            retaliation = true;
-        }
-
-        if (attacker.getHitPoints() <= enemyHP) {
-            if (thisAnt.getDirection() == dir) {
-                retaliation = true;
-            } else if (thisAnt.getDirection() != dir) {
-                turnToDir(dir, thisAnt);
-            }
-        } else {
-            goingHome = true;
-        }
-    }
-
+//    public void getAttacker(IAntInfo thisAnt, int dir, IAntInfo attacker) {
+//        int enemyHP = setEnemyConditions(thisAnt, attacker);
+//
+//        if (attacker.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
+//            turnToDir(dir, thisAnt);
+//            retaliation = true;
+//        }
+//
+//        if (attacker.getHitPoints() <= enemyHP) {
+//            if (thisAnt.getDirection() == dir) {
+//                retaliation = true;
+//            } else if (thisAnt.getDirection() != dir) {
+//                turnToDir(dir, thisAnt);
+//            }
+//        } else {
+//            goingHome = true;
+//        }
+//    }
     // Martin method
     public void decideAttackRespons(int dir, IAntInfo thisAnt, IAntInfo attacker) {
 
@@ -237,13 +229,12 @@ public class MidLevelAI extends LowLevelAI {
         if (attackerT.equalsIgnoreCase("QUEEN")) {
             turnToDir(dir, thisAnt);
             retaliation = true;
-            return;
+            hive.setEnemyQueenSpotted(attacker.getLocation());
         } else if (thisAntT.equalsIgnoreCase("QUEEN")) {
             retaliation = false;
             goingHome = true;
-            return;
         } else if (thisAntT.equalsIgnoreCase("SCOUT") || thisAntT.equalsIgnoreCase("CARRIER")) {
-            if (attackerT.equalsIgnoreCase("WARRIOR")) {
+            if (attackerT.equalsIgnoreCase("WARRIER")) {
                 retaliation = false;
                 goingHome = true;
             } else {
@@ -256,28 +247,40 @@ public class MidLevelAI extends LowLevelAI {
     }
 
     //--------------------------------------------------------------------------
-    //ON ATTACK METHODS - END
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
     //Dig Soil 
     //--------------------------------------------------------------------------
-    public EAction dig() {
-        EAction action = null;
+    public EAction checkIfStuck(IAntInfo thisAnt) {
 
-        if (visLoc.get(0).isFilled() && pA.contains(EAction.DigOut)) {
-            action = EAction.DigOut;
-            digLoc = visLoc.get(0);
-
-            //Drop soil at startLoc?
-            //goingHome = true;
+        ILocationInfo currentPos = thisAnt.getLocation();
+        if (lastPos == null) {
+            lastPos = hive.getStartPos();
         }
 
-        return action;
+        if (currentPos.getX() == lastPos.getX() && currentPos.getY() == lastPos.getY()) {
+            stuckCounter++;
+            System.out.println("Count: " + stuckCounter);
+        } else {
+            System.out.println("Not same pos!");
+            stuckCounter = 0;
+            lastPos = currentPos;
+        }
+
+        if (stuckCounter >= 10) {
+            System.out.println("I was stuck!!");
+            if (goingHome) {
+                goingHome = false;
+                findEnemyQueen = false;
+            } else {
+                goingHome = true;
+                findEnemyQueen = false;
+            }
+            stuckCounter = 0;
+        }
+
+        return EAction.Pass;
     }
 
-    //Not sure if "Go to start location with soil" is a good idea. 
-    //Blockage can occur in small tunnels. Comment out if needed.
-    public EAction dropSoil(IAntInfo thisAnt) {
+    public EAction handleSoil(IAntInfo thisAnt) {
         EAction action = null;
 
         if (!isBlind(thisAnt) && !isNextToBlind()) {

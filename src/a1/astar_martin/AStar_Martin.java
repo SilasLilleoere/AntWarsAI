@@ -24,21 +24,9 @@ public class AStar_Martin {
 
     public static Queue<Node> openSet = new PriorityQueue<>();
     public static Set<Node> closedSet = new HashSet<>();
-    Node start;
-    Node goal;
-    Node[][] nodes = null;
-
-    public static void main(String[] args) {
-
-//        AStar_Martin algo = new AStar_Martin();
-//        nodes = algo.makeNodeArray();
-//
-//        Iterable<Node> path = algo.findShortestPath(nodes[1][1], nodes[4][2]);
-//
-//        for (Node n : path) {
-//            System.out.println(n + " dist " + n.getGVal());
-//        }
-    }
+    private Node start;
+    private Node goal;
+    private Node[][] nodes = null;
 
     public AStar_Martin(int worldWidth, int worldHeight) {
         this.nodesWidth = worldWidth;
@@ -48,13 +36,15 @@ public class AStar_Martin {
     public Node[][] makeNodeArray(ILocationInfo[][] antMap) {
 
         nodes = null;
-        //creates Nodes for nodes[][]. Adds locations with soil og rock to closedSet;
+        //creates Nodes for nodes[][]. Adds locations with soil, rock and ants to closedSet;
         if (nodes == null) {
             Node[][] res = new Node[nodesWidth][nodesHeight];
             for (int x = 0; x < nodesWidth; x++) {
                 for (int y = 0; y < nodesHeight; y++) {
                     String name = x + ":" + y;
                     res[x][y] = new Node(name, x, y);
+                    //note: we also check if there is an ant in the way. If the ant is placed on the goal, 
+                    //then it shouldn't be added to closedSet. 
                     if (antMap[x][y].isFilled() || antMap[x][y].isRock()) {
                         closedSet.add(res[x][y]);
                     }
@@ -174,7 +164,6 @@ public class AStar_Martin {
 //        yn = y + 1;
 //        edge = createEdge(currentNode, xn, yn);
 //        currentNode.addEdge(edge);
-        
         //East
         xn = x + 1;
         yn = y;

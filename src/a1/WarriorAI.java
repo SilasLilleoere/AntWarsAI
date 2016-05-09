@@ -29,7 +29,7 @@ public class WarriorAI extends MidLevelAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        AStarPathFinder = hive.getAStarInstance();
+        AStar = hive.getAStarInstance();
     }
 
     @Override
@@ -58,11 +58,11 @@ public class WarriorAI extends MidLevelAI implements IAntAI {
         }
 
         //       #3 Search n Destroy
-        if(action == null && findEnemyQueen){
-            System.out.println("Warrior is now moving towards enemyQueen's last location");
-        action = moveTo(thisAnt, goal, hive.getMap());        
+        if (action == null && findEnemyQueen) {
+            // System.out.println("Going towards enemyQueen at: " + goal.getX() + "," + goal.getY());
+            action = moveTo(thisAnt, goal, hive.getMap());
         }
-      
+
         //       #4 Gather
         if (thisAnt.getFoodLoad() < 4 && action == null) {
             action = pickUpFood(thisAnt);
@@ -71,14 +71,13 @@ public class WarriorAI extends MidLevelAI implements IAntAI {
         //       #5 Scout
         if (action == null) {
             action = explore(thisAnt);
-            if (action != null) {
-                //System.out.println("Warrior: scout");
-            }
         }
-
+        //      #5 Pass/CheckIfStuck
         if (action == null) {
             action = EAction.Pass;
+            checkIfStuck(thisAnt);
         }
+
         return action;
     }
 

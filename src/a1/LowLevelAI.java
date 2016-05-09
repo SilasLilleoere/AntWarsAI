@@ -34,7 +34,7 @@ public class LowLevelAI {
     Random ran = new Random();
 
     TheHive hive = null;
-    AStar_Martin AStarPathFinder = null;
+    AStar_Martin AStar = null;
 
     public IAntInfo getAnt() {
         IAntInfo ant = null;
@@ -81,7 +81,7 @@ public class LowLevelAI {
                 enemy = true;
             }
             if (enemy && enemyAnt.getAntType().getTypeName().equalsIgnoreCase("QUEEN")) {
-                hive.setEnemyQueenSpotted(enemyAnt.getLocation());
+                // hive.setEnemyQueenSpotted(enemyAnt.getLocation());
             }
         }
         return enemy;
@@ -103,18 +103,17 @@ public class LowLevelAI {
     }
 
     //Check visibleLocations for food
-    public boolean isFoodAhead() {
-        boolean foodAhead = false;
-        if (visLoc.size() > 0) {
-            for (int i = 0; i < visLoc.size(); i++) {
-                if (visLoc.get(i).getFoodCount() > 0) {
-                    foodAhead = true;
-                }
-            }
-        }
-        return foodAhead;
-    }
-
+//    public boolean isFoodAhead() {
+//        boolean foodAhead = false;
+//        if (visLoc.size() > 0) {
+//            for (int i = 0; i < visLoc.size(); i++) {
+//                if (visLoc.get(i).getFoodCount() > 0) {
+//                    foodAhead = true;
+//                }
+//            }
+//        }
+//        return foodAhead;
+//    }
     public EAction nextMove(ILocationInfo loc, IAntInfo thisAnt) {
         EAction action = null;
 
@@ -191,7 +190,7 @@ public class LowLevelAI {
 
     }
 
-    public EAction turnRnd(IAntInfo thisAnt, TheHive hive) {
+    public EAction turnRnd(IAntInfo thisAnt) {
         EAction action = null;
 
         int height = hive.getBoardSizeY();
@@ -227,52 +226,51 @@ public class LowLevelAI {
         return action;
     }
 
-    public int setEnemyConditions(IAntInfo thisAnt, IAntInfo enemy) {
-        int enemyHP = 0;
-        String meType = thisAnt.getAntType().getTypeName();
-        String enemyType = enemy.getAntType().getTypeName();
-
-        //QUEEN
-        if (meType.equalsIgnoreCase("QUEEN")) {
-            if (enemyType.equalsIgnoreCase("QUEEN")) {
-                enemyHP = thisAnt.getHitPoints() - 1;
-            } else {
-                enemyHP = 1;
-            }
-
-        } else if (enemyType.equalsIgnoreCase("QUEEN")) {
-            enemyHP = Integer.MAX_VALUE;
-
-        } //CARRIER
-        else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("SCOUT")) {
-            enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("CARRIER")) {
-            enemyHP = Integer.MAX_VALUE;
-
-        } //SCOUT
-        else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("SCOUT")) {
-            enemyHP = 4;
-
-        } else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("CARRIER")) {
-            enemyHP = 4;
-
-        } //WARRIOR
-        else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("SCOUT")) {
-            enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("CARRIER")) {
-            enemyHP = Integer.MAX_VALUE;
-        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("WARRIOR")) {
-            enemyHP = Integer.MAX_VALUE;
-
-        }//NON WARRIOR
-        else if (enemyType.equalsIgnoreCase("WARRIOR")) {
-            enemyHP = 1;
-        } else {
-            enemyHP = 1;
-        }
-        return enemyHP;
-    }
-
+//    public int setEnemyConditions(IAntInfo thisAnt, IAntInfo enemy) {
+//        int enemyHP = 0;
+//        String meType = thisAnt.getAntType().getTypeName();
+//        String enemyType = enemy.getAntType().getTypeName();
+//
+//        //QUEEN
+//        if (meType.equalsIgnoreCase("QUEEN")) {
+//            if (enemyType.equalsIgnoreCase("QUEEN")) {
+//                enemyHP = thisAnt.getHitPoints() - 1;
+//            } else {
+//                enemyHP = 1;
+//            }
+//
+//        } else if (enemyType.equalsIgnoreCase("QUEEN")) {
+//            enemyHP = Integer.MAX_VALUE;
+//
+//        } //CARRIER
+//        else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("SCOUT")) {
+//            enemyHP = Integer.MAX_VALUE;
+//        } else if (meType.equalsIgnoreCase("CARRIER") && enemyType.equalsIgnoreCase("CARRIER")) {
+//            enemyHP = Integer.MAX_VALUE;
+//
+//        } //SCOUT
+//        else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("SCOUT")) {
+//            enemyHP = 4;
+//
+//        } else if (meType.equalsIgnoreCase("SCOUT") && enemyType.equalsIgnoreCase("CARRIER")) {
+//            enemyHP = 4;
+//
+//        } //WARRIOR
+//        else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("SCOUT")) {
+//            enemyHP = Integer.MAX_VALUE;
+//        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("CARRIER")) {
+//            enemyHP = Integer.MAX_VALUE;
+//        } else if (meType.equalsIgnoreCase("WARRIOR") && enemyType.equalsIgnoreCase("WARRIOR")) {
+//            enemyHP = Integer.MAX_VALUE;
+//
+//        }//NON WARRIOR
+//        else if (enemyType.equalsIgnoreCase("WARRIOR")) {
+//            enemyHP = 1;
+//        } else {
+//            enemyHP = 1;
+//        }
+//        return enemyHP;
+//    }
     public EAction pickUpFood(IAntInfo thisAnt) {
         EAction action = null;
 
@@ -289,5 +287,21 @@ public class LowLevelAI {
         }
         return action;
     }
+
+    public EAction dig() {
+        EAction action = null;
+
+        if (visLoc.get(0).isFilled() && pA.contains(EAction.DigOut)) {
+            action = EAction.DigOut;
+            digLoc = visLoc.get(0);
+
+            //Drop soil at startLoc?
+            //goingHome = true;
+        }
+
+        return action;
+    }
+
+
 
 }

@@ -134,7 +134,6 @@ public class DataCollector {
         String TheAntType = antType;
         switch (TheAntType) {
             case "Warrier": { //warrior return of getAntType() is spelled wrong: warrier
-                System.out.println("warrior bliver talt");
                 int cal = (isAlive) ? 1 : -1;
                 warriorCount += cal;
                 break;

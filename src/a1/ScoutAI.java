@@ -25,7 +25,7 @@ public class ScoutAI extends MidLevelAI implements IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        AStarPathFinder = hive.getAStarInstance();
+        AStar = hive.getAStarInstance();
     }
 
     @Override
@@ -54,8 +54,11 @@ public class ScoutAI extends MidLevelAI implements IAntAI {
         if (action == null) {
             action = explore(thisAnt);
         }
+
+        //#5 Pass/CheckIfStuck
         if (action == null) {
             action = EAction.Pass;
+            checkIfStuck(thisAnt);
         }
         return action;
     }

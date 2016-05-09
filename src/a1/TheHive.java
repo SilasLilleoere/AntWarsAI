@@ -5,7 +5,7 @@ import aiantwars.impl.Location;
 import a1.astar_martin.AStar_Martin;
 import a1.datacollection.DataCollector;
 import a1.datacollection.DataObject;
-import a1.datacollection.Policies;
+import a1.datacollection.HighLevelAI;
 import aiantwars.EAntType;
 import java.util.List;
 
@@ -15,22 +15,18 @@ import java.util.List;
  */
 public class TheHive {
 
-    //Sorry, this needs to be in DataCollection---
-    private ILocationInfo currPos = null;//-------
-    //--------------------------------------------
-
+    private int friendlyAntTeamID;
     private ILocationInfo startPos = null;
     private int boardSizeX = 0;
     private int boardSizeY = 0;
     private ILocationInfo[][] hiveMap = null;
     private AStar_Martin AStarInstance = null;
     private DataCollector d = new DataCollector();
-    private Policies p = new Policies(this);
+    private HighLevelAI p = new HighLevelAI(this);
 
     public AStar_Martin getAStarInstance() {
 
         if (AStarInstance == null) {
-            System.out.println("Laver en instance af ASTAR :" + boardSizeX);
             AStarInstance = new AStar_Martin(boardSizeX, boardSizeY);
         }
         return AStarInstance;
@@ -72,6 +68,14 @@ public class TheHive {
 
         for (ILocationInfo loc : visLoc) {
             hiveMap[loc.getX()][loc.getY()] = loc;
+            //checks if enemyQueen is in visLoc
+            if (loc.getAnt() != null) {
+                if (loc.getAnt().getTeamInfo().getTeamID() != friendlyAntTeamID) {
+                    if (loc.getAnt().getAntType().getTypeName().equalsIgnoreCase("Queen")) {
+                        setEnemyQueenSpotted(loc.getAnt().getLocation());
+                    }
+                }
+            }
         }
         //updates information in policies
         p.updateData();
@@ -101,12 +105,8 @@ public class TheHive {
         startPos = queenLoc;
     }
 
-    public ILocationInfo getCurrPos() {
-        return currPos;
-    }
-
-    public void setCurrPos(ILocationInfo currPos) {
-        this.currPos = currPos;
+    public void setFriendlyAntTeamID(int friendlyAntTeamID) {
+        this.friendlyAntTeamID = friendlyAntTeamID;
     }
     //-----------------------POLICIES METHODS---------------------------------------------
 
@@ -142,7 +142,7 @@ public class TheHive {
     }
 
     public void setEnemyQueenSpotted(ILocationInfo loc) {
-        System.out.println("enemyQueen spotted!!");
+      //  System.out.println("enemyQueen spotted!!");
         d.setEnemyQueenSpotted(loc);
         p.fillAttackStack();
     }
