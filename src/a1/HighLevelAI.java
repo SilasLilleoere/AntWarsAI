@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package a1.datacollection;
+package a1;
 
 //1.Start State
 import a1.TheHive;
+import a1.datacollection.DataObject;
+import a1.datacollection.State;
 import aiantwars.EAntType;
 import aiantwars.ILocationInfo;
 import java.util.List;

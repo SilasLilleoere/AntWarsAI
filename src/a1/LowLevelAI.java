@@ -5,7 +5,7 @@
  */
 package a1;
 
-import a1.astar_martin.AStar_Martin;
+import a1.astar.AStar;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
@@ -34,7 +34,7 @@ public class LowLevelAI {
     Random ran = new Random();
 
     TheHive hive = null;
-    AStar_Martin AStar = null;
+    AStar AStar = null;
 
     public IAntInfo getAnt() {
         IAntInfo ant = null;
@@ -43,28 +43,6 @@ public class LowLevelAI {
             ant = visLoc.get(0).getAnt();
         }
         return ant;
-    }
-
-    public void turnToDir(int dir, IAntInfo thisAnt) {
-
-        if (thisAnt.getDirection() == 0 && dir == 3) {
-            turnTo.add(EAction.TurnLeft);
-        } else if (thisAnt.getDirection() == 3 && dir == 0) {
-            turnTo.add(EAction.TurnRight);
-        } else if (thisAnt.getDirection() == dir + 2 || thisAnt.getDirection() == dir - 2) {
-            turnTo.add(EAction.TurnRight);
-            turnTo.add(EAction.TurnRight);
-        } else if (thisAnt.getDirection() > dir) {
-            turnTo.add(EAction.TurnLeft);
-        } else if (thisAnt.getDirection() < dir) {
-            turnTo.add(EAction.TurnRight);
-        }
-
-        //if ant is facing dir, then clear turnTo array
-        if (thisAnt.getDirection() == dir) {
-            turnTo.clear();
-        }
-
     }
 
     public boolean isEnemy(IAntInfo thisAnt) {
@@ -114,6 +92,30 @@ public class LowLevelAI {
 //        }
 //        return foodAhead;
 //    }
+    
+    
+    public void turnToDir(int dir, IAntInfo thisAnt) {
+
+        if (thisAnt.getDirection() == 0 && dir == 3) {
+            turnTo.add(EAction.TurnLeft);
+        } else if (thisAnt.getDirection() == 3 && dir == 0) {
+            turnTo.add(EAction.TurnRight);
+        } else if (thisAnt.getDirection() == dir + 2 || thisAnt.getDirection() == dir - 2) {
+            turnTo.add(EAction.TurnRight);
+            turnTo.add(EAction.TurnRight);
+        } else if (thisAnt.getDirection() > dir) {
+            turnTo.add(EAction.TurnLeft);
+        } else if (thisAnt.getDirection() < dir) {
+            turnTo.add(EAction.TurnRight);
+        }
+
+        //if ant is facing dir, then clear turnTo array
+        if (thisAnt.getDirection() == dir) {
+            turnTo.clear();
+        }
+
+    }
+
     public EAction nextMove(ILocationInfo loc, IAntInfo thisAnt) {
         EAction action = null;
 

@@ -30,7 +30,7 @@ public class State {
     State seachAndDestoryState;
     State saveFoodState;
 
-    //scouts, warriors, carrier, queenGoHome, defendQueen, SearchForEnemy, reducePopulation.
+    //scouts, warriors, carrier, queenGoHome, defendQueen, reducePopulation, SearchForEnemy.
     //-1 means not to take into account.
     public State() {
 
@@ -61,7 +61,7 @@ public class State {
         //1 carrier  
         //activity:
         //Send 5 warrior to location where we think enemyQueen could be.        
-        seachAndDestoryState = new State(1, 10, 1, false, false, true, false);
+        seachAndDestoryState = new State(1, 10, 1, false, false, false, true);
 
         //have atleast/have maximum:
         //1 scout
@@ -69,7 +69,7 @@ public class State {
         //1 carrier       
         //activity:
         //kill off own ants, until this state is meet.          
-        saveFoodState = new State(1, 4, 2, false, false, false, true);
+        saveFoodState = new State(1, 4, 2, false, false, true, false);
     }
 
     public State(int scoutAmount, int warriorAmount, int carrierAmount, boolean queenGoHome, boolean defendQueen, boolean reducePopulation, boolean searchForEnemy) {

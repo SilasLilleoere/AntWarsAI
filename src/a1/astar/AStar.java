@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package a1.astar_martin;
+package a1.astar;
 
 import aiantwars.ILocationInfo;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author martins
  */
-public class AStar_Martin {
+public class AStar {
 
     static int nodesHeight = 0;
     static int nodesWidth = 0;
@@ -28,7 +28,7 @@ public class AStar_Martin {
     private Node goal;
     private Node[][] nodes = null;
 
-    public AStar_Martin(int worldWidth, int worldHeight) {
+    public AStar(int worldWidth, int worldHeight) {
         this.nodesWidth = worldWidth;
         this.nodesHeight = worldHeight;
     }

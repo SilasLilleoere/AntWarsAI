@@ -2,10 +2,9 @@ package a1;
 
 import aiantwars.ILocationInfo;
 import aiantwars.impl.Location;
-import a1.astar_martin.AStar_Martin;
+import a1.astar.AStar;
 import a1.datacollection.DataCollector;
 import a1.datacollection.DataObject;
-import a1.datacollection.HighLevelAI;
 import aiantwars.EAntType;
 import java.util.List;
 
@@ -20,14 +19,14 @@ public class TheHive {
     private int boardSizeX = 0;
     private int boardSizeY = 0;
     private ILocationInfo[][] hiveMap = null;
-    private AStar_Martin AStarInstance = null;
+    private AStar AStarInstance = null;
     private DataCollector d = new DataCollector();
     private HighLevelAI p = new HighLevelAI(this);
 
-    public AStar_Martin getAStarInstance() {
+    public AStar getAStarInstance() {
 
         if (AStarInstance == null) {
-            AStarInstance = new AStar_Martin(boardSizeX, boardSizeY);
+            AStarInstance = new AStar(boardSizeX, boardSizeY);
         }
         return AStarInstance;
     }
